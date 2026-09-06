@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface: #fff8f0;
+  --color-surface-dim: #e3d9c6;
+  --color-surface-bright: #fff8f0;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #fdf3df;
+  --color-surface-container: #f7edda;
+  --color-surface-container-high: #f1e7d4;
+  --color-surface-container-highest: #ebe1cf;
+  --color-surface-variant: #ebe1cf;
+  --color-on-surface: #1f1b10;
+  --color-on-surface-variant: #5a413c;
+  --color-inverse-surface: #353023;
+  --color-inverse-on-surface: #faf0dc;
+  --color-outline: #8e706a;
+  --color-outline-variant: #e2bfb8;
+  --color-surface-tint: #b12d15;
+
+  --color-primary: #9e1f07;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #c1381f;
+  --color-on-primary-container: #ffe5e0;
+  --color-inverse-primary: #ffb4a5;
+  --color-primary-fixed: #ffdad3;
+  --color-primary-fixed-dim: #ffb4a5;
+  --color-on-primary-fixed: #3e0400;
+  --color-on-primary-fixed-variant: #8e1400;
+
+  --color-secondary: #446274;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #c5e4fa;
+  --color-on-secondary-container: #496679;
+  --color-secondary-fixed: #c8e7fd;
+  --color-secondary-fixed-dim: #accbe0;
+  --color-on-secondary-fixed: #001e2d;
+  --color-on-secondary-fixed-variant: #2c4a5c;
+
+  --color-tertiary: #175b50;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #357468;
+  --color-on-tertiary-container: #b6f7e8;
+  --color-tertiary-fixed: #aeefe0;
+  --color-tertiary-fixed-dim: #93d3c4;
+  --color-on-tertiary-fixed: #00201b;
+  --color-on-tertiary-fixed-variant: #035045;
+
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  --color-background: #fff8f0;
+  --color-on-background: #1f1b10;
+
+  --font-headline: "Archivo Narrow", sans-serif;
+  --font-body: "Work Sans", sans-serif;
+  --font-price: "Archivo Narrow", sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-background);
+  color: var(--color-on-surface);
+  margin: 0;
+  padding: 0;
+}
+
+.font-headline {
+  font-family: var(--font-headline);
+}
+
+.font-price-display {
+  font-family: var(--font-price);
+}
+
+.custom-scroll::-webkit-scrollbar,
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scroll::-webkit-scrollbar-thumb,
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #8e706a;
+  border-radius: 9999px;
+}
+.custom-scroll::-webkit-scrollbar-track,
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}

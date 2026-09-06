@@ -1,0 +1,77 @@
+{
+  "entities": {
+    "Order": {
+      "title": "Order",
+      "description": "Customer food order with direct vendor bank transfer tracking",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "vendorId": { "type": "string" },
+        "vendorName": { "type": "string" },
+        "vendorPhone": { "type": "string" },
+        "customerName": { "type": "string" },
+        "customerPhone": { "type": "string" },
+        "destination": { "type": "string" },
+        "items": { "type": "array" },
+        "foodSubtotal": { "type": "number" },
+        "dispatchFee": { "type": "number" },
+        "packagingFee": { "type": "number" },
+        "totalAmount": { "type": "number" },
+        "bankName": { "type": "string" },
+        "accountNumber": { "type": "string" },
+        "accountName": { "type": "string" },
+        "paymentStatus": {
+          "type": "string",
+          "enum": ["pending_transfer", "customer_confirmed", "vendor_verified", "rejected"]
+        },
+        "kitchenStatus": {
+          "type": "string",
+          "enum": ["idle", "cooking", "packaging", "dispatched", "delivered"]
+        },
+        "prepEtaMins": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "customerConfirmedAt": { "type": "string" },
+        "vendorVerifiedAt": { "type": "string" }
+      },
+      "required": [
+        "id",
+        "vendorId",
+        "vendorName",
+        "customerName",
+        "customerPhone",
+        "destination",
+        "totalAmount",
+        "paymentStatus"
+      ]
+    },
+    "Vendor": {
+      "title": "Vendor",
+      "description": "Verified Lokoja Buka / Restaurant profile and bank account details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "vendorId": { "type": "string" },
+        "name": { "type": "string" },
+        "ownerName": { "type": "string" },
+        "phone": { "type": "string" },
+        "address": { "type": "string" },
+        "bankName": { "type": "string" },
+        "accountNumber": { "type": "string" },
+        "accountName": { "type": "string" },
+        "isKitchenLive": { "type": "boolean" },
+        "tier": { "type": "string" }
+      },
+      "required": ["id", "vendorId", "name", "phone", "accountNumber"]
+    }
+  },
+  "firestore": {
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Food orders placed across Lokoja Bukas"
+    },
+    "/vendors/{vendorDocId}": {
+      "schema": { "$ref": "#/entities/Vendor" },
+      "description": "Directory of approved Bukas and payment settlement info"
+    }
+  }
+}

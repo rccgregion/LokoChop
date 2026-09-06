@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#993B00"/>
+      <stop offset="100%" stop-color="#6F2800"/>
+    </linearGradient>
+  </defs>
+  <rect width="192" height="192" rx="36" fill="url(#primaryGrad)"/>
+  <!-- Confluence River Waves & Fire Symbol -->
+  <circle cx="96" cy="96" r="64" fill="#FFE5D6" fill-opacity="0.15"/>
+  <path d="M96 48C90 64 74 76 74 96C74 108.15 83.85 118 96 118C108.15 118 118 108.15 118 96C118 76 102 64 96 48Z" fill="#FF8438"/>
+  <path d="M96 68C92 80 84 88 84 100C84 106.6 89.4 112 96 112C102.6 112 108 106.6 108 100C108 88 100 80 96 68Z" fill="#FFFBF5"/>
+  <!-- Confluence River curves at base -->
+  <path d="M52 144C66 138 82 148 96 142C110 136 126 146 140 140" stroke="#FFE5D6" stroke-width="6" stroke-linecap="round" fill="none"/>
+  <path d="M60 156C72 151 84 158 96 153C108 148 120 155 132 150" stroke="#FF8438" stroke-width="4" stroke-linecap="round" fill="none"/>
+</svg>

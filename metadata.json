@@ -1,0 +1,8 @@
+{
+  "name": "Remix LokoChop",
+  "description": "Confluence food delivered across Lokoja with direct vendor bank transfers, live dispatch tracking, and multi-tier neighborhood logistics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
