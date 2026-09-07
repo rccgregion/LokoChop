@@ -205,22 +205,35 @@ export const OrderTrackingView: React.FC<OrderTrackingViewProps> = ({ onNavigate
                   ? 'bg-emerald-100 text-emerald-800' 
                   : 'bg-primary-fixed text-primary'
               }`}>
-                {isPaymentConfirmedByVendor ? 'Payment Verified & Cooking' : 'Payment Under Vendor Review'}
+                {isPaymentConfirmedByVendor ? 'Payment Verified & Portioning' : 'Payment Under Vendor Review'}
               </div>
               
               <h1 className="font-headline text-2xl md:text-3xl font-bold text-on-surface leading-tight">
                 {isDispatched
                   ? 'Food Handed to Confluence Rider'
                   : isCooking || isPaymentConfirmedByVendor
-                  ? `Cooking on Fire at ${currentOrder.vendorName}`
+                  ? `Pots Ready & Packaging at ${currentOrder.vendorName}`
                   : 'Awaiting Vendor Payment Confirmation'}
               </h1>
 
               <p className="text-xs sm:text-sm text-on-surface-variant mt-2 leading-relaxed">
                 {isPaymentConfirmedByVendor
-                  ? `The kitchen verified credit of ₦${currentOrder.totalAmount.toLocaleString()} to ${currentOrder.bankDetails.bankName}. Your food is being prepared warm and fresh.`
+                  ? `The kitchen verified credit of ₦${currentOrder.totalAmount.toLocaleString()} to ${currentOrder.bankDetails.bankName}. Because morning pots are hot and ready by 10:00 AM, food does not need raw cooking from scratch—it is being portioned and sealed into tamper-evident thermal packs right now!`
                   : `Customer confirmed bank transfer of ₦${currentOrder.totalAmount.toLocaleString()} to ${currentOrder.bankDetails.bankName} #${currentOrder.bankDetails.accountNumber}. The vendor is reconciling their mobile bank alert.`}
               </p>
+            </div>
+
+            {/* Thermal Freshness Guarantee Card */}
+            <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs flex items-start gap-2.5">
+              <span className="text-lg">🔥</span>
+              <div className="space-y-0.5">
+                <strong className="text-amber-900 dark:text-amber-300 font-bold block">
+                  Lokoja Thermal Warmth Guarantee
+                </strong>
+                <p className="text-on-surface-variant text-[11px] leading-relaxed">
+                  Food is kept hot in kitchen warmers (prepared fresh by 10:00 AM daily) and dispatched in double-insulated thermal delivery packs. No cold food anxiety!
+                </p>
+              </div>
             </div>
 
             {/* Live WhatsApp Alert Triggers for Customer */}
@@ -380,13 +393,13 @@ export const OrderTrackingView: React.FC<OrderTrackingViewProps> = ({ onNavigate
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <p className="font-headline text-sm font-bold text-on-surface">4. Food Cooking on Fireplace</p>
+                      <p className="font-headline text-sm font-bold text-on-surface">4. Portioning &amp; Tamper-Evident Packaging</p>
                       <span className={isPaymentConfirmedByVendor ? 'text-amber-700 font-bold' : 'text-on-surface-variant'}>
-                        {isPaymentConfirmedByVendor ? 'Cooking Active' : 'Pending'}
+                        {isPaymentConfirmedByVendor ? 'Pots Ready Since 10am' : 'Pending'}
                       </span>
                     </div>
                     <p className="text-on-surface-variant text-[11px]">
-                      Pots on fire. Delivery ETA set to {currentOrder.prepEtaMins} minutes.
+                      Food cooked fresh by 10:00 AM and kept warm in insulated warmers. Fast 3–7 min packaging turnaround into leakproof thermal containers.
                     </p>
                   </div>
                 </div>

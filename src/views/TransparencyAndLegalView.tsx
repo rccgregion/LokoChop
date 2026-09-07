@@ -102,6 +102,20 @@ export const TransparencyAndLegalView: React.FC<TransparencyAndLegalViewProps> =
       Riders receive 100% of the base dispatch fee (₦800) plus 100% of any multi-vendor pickup surcharge (₦450 per additional kitchen). Unlike multinational gig apps, LokoChop takes 0% cut of the rider's delivery fee, ensuring our riders take exceptional care of your hot food.`
     },
     {
+      q: 'Why does delivery happen so fast? Is food cooked from scratch or ready in warmers?',
+      category: 'Kitchen Operations & Freshness',
+      a: `In Lokoja's traditional and modern food culture, morning cooking batches of authentic Nigerian soups (Egusi, Ogbono, Bitterleaf, Ewedu, Gbegiri, Seafood Catfish), party jollof, fried rice, and swallows are prepared and bubbling in commercial kitchen warmers by 10:00 AM each day.
+      
+      Because the bulk pots are already hot and ready, orders do NOT require 45 minutes of cooking from raw ingredients. Kitchen staff only need 3 to 7 minutes to portion your meal, pack steaming meats, and heat-seal your leak-proof container into insulated thermal packaging before handoff to your dispatch rider.`
+    },
+    {
+      q: 'How does LokoChop ensure an item is still available and not sold out when I order?',
+      category: 'Stock & Menu Accuracy',
+      a: `To prevent the frustration of ordering a soup only to be told it is finished, LokoChop operates an automated 2-Hourly WhatsApp Stock Synchronizer. 
+      
+      Every day at 10:00 AM, 12:00 PM, 2:00 PM, 4:00 PM, 6:00 PM, and 8:00 PM, Central Dispatch sends a direct WhatsApp prompt to each restaurant manager's registered phone line. Vendors confirm their remaining pot portions or mark finished dishes as 'Sold Out' in 1 tap on their Vendor Hub console. Any finished dish is instantly hidden or disabled across the LokoChop customer menu.`
+    },
+    {
       q: 'How do I register my restaurant or become an approved dispatch rider?',
       category: 'Partnerships',
       a: `Click 'Vendor Onboarding' in the top navigation bar or footer. You can submit your kitchen details, CAC registration or food hygiene permit, menu items, and bank account for verification. Our local Lokoja team conducts an in-person physical kitchen inspection within 24 to 48 hours before activating your live storefront.`

@@ -34,8 +34,18 @@ import {
   Receipt,
   Sparkles,
   PackageCheck,
-  Eye
+  Eye,
+  Send,
+  Radio,
+  Timer
 } from 'lucide-react';
+import { 
+  getCurrentAndNextStockSlot, 
+  STOCK_NOTIFICATION_SLOTS, 
+  buildVendorStockPromptWhatsAppUrl, 
+  recordVendorStockConfirmation, 
+  getVendorLastConfirmedTimes 
+} from '../services/vendorStockService';
 
 export interface AdminPipelineOrder {
   id: string;
@@ -138,7 +148,25 @@ export const AdminVendorMonitor: React.FC<AdminVendorMonitorProps> = ({
   const [vendorCategory, setVendorCategory] = useState('All');
 
   // Subtabs within the vendor monitor view
-  const [monitorTab, setMonitorTab] = useState<'pipeline' | 'menu' | 'remittance' | 'catering' | 'reviews'>('pipeline');
+  const [monitorTab, setMonitorTab] = useState<'pipeline' | 'stock' | 'menu' | 'remittance' | 'catering' | 'reviews'>('pipeline');
+
+  // 2-Hourly Stock Verification Schedule State (10am, 12pm, 2pm, 4pm, 6pm, 8pm)
+  const [stockInfo, setStockInfo] = useState(() => getCurrentAndNextStockSlot());
+  const [confirmedSlots, setConfirmedSlots] = useState<Record<string, string>>(() => getVendorLastConfirmedTimes());
+
+  const handleAdminVerifyVendorStock = (vendorId: string, vendorName: string) => {
+    recordVendorStockConfirmation(vendorId, stockInfo.currentSlot.slot);
+    setConfirmedSlots(getVendorLastConfirmedTimes());
+    showToast(`Stock confirmed for ${vendorName} for ${stockInfo.currentSlot.slot} window!`);
+  };
+
+  const handleBroadcastAllVendors = () => {
+    vendors.forEach(v => {
+      recordVendorStockConfirmation(v.id, stockInfo.currentSlot.slot);
+    });
+    setConfirmedSlots(getVendorLastConfirmedTimes());
+    showToast(`Dispatched 2-hourly WhatsApp stock ping for ${stockInfo.currentSlot.slot} to all ${vendors.length} vendors!`);
+  };
 
   // Live kitchen open/paused status overrides
   const [kitchenStatuses, setKitchenStatuses] = useState<Record<string, boolean>>(() => {
@@ -533,6 +561,21 @@ export const AdminVendorMonitor: React.FC<AdminVendorMonitorProps> = ({
           </button>
 
           <button
+            onClick={() => setMonitorTab('stock')}
+            className={`px-3.5 py-2 rounded-xl font-bold transition-all flex items-center gap-1.5 cursor-pointer shrink-0 ${
+              monitorTab === 'stock'
+                ? 'bg-secondary text-white shadow-xs'
+                : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
+            }`}
+          >
+            <Radio className="w-3.5 h-3.5 text-amber-500 animate-pulse" />
+            <span>2-Hourly WhatsApp Stock Broadcast</span>
+            <span className="ml-1 px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-900 dark:text-amber-200 text-[10px] font-bold">
+              {stockInfo.currentSlot.slot}
+            </span>
+          </button>
+
+          <button
             onClick={() => setMonitorTab('menu')}
             className={`px-3.5 py-2 rounded-xl font-bold transition-all flex items-center gap-1.5 cursor-pointer shrink-0 ${
               monitorTab === 'menu'
@@ -784,6 +827,214 @@ export const AdminVendorMonitor: React.FC<AdminVendorMonitorProps> = ({
                 </div>
               </div>
 
+            </div>
+          </div>
+        )}
+
+        {/* SUBTAB 1.5: 2-HOURLY WHATSAPP STOCK BROADCAST & VERIFICATION */}
+        {monitorTab === 'stock' && (
+          <div className="space-y-5 animate-fade-in">
+            {/* Top Operational Context Banner */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-3">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <div className="flex items-start sm:items-center gap-3">
+                  <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-700 dark:text-amber-300 flex items-center justify-center shrink-0">
+                    <Radio className="w-5 h-5 animate-pulse" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h4 className="font-headline font-bold text-sm sm:text-base text-on-surface">
+                        2-Hourly WhatsApp Stock Broadcast System
+                      </h4>
+                      <span className="text-[10px] bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" /> Pots Ready Since 10:00 AM
+                      </span>
+                      <span className="text-[10px] bg-primary/10 text-primary font-bold px-2 py-0.5 rounded-full">
+                        Active Slot: {stockInfo.currentSlot.slot} ({stockInfo.currentSlot.label})
+                      </span>
+                    </div>
+                    <p className="text-xs text-on-surface-variant mt-1 leading-relaxed max-w-3xl">
+                      In Lokoja, standard food is pre-cooked and ready in warming pots by 10:00 AM. Central Dispatch sends WhatsApp pings every 2 hours (10:00 AM, 12:00 PM, 2:00 PM, 4:00 PM, 6:00 PM, 8:00 PM) to confirm which soups, rice, or specials are in stock before customers order.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 self-start md:self-auto shrink-0">
+                  <div className="text-right">
+                    <span className="text-[10px] text-on-surface-variant font-medium block">Next Scheduled Ping:</span>
+                    <span className="font-mono font-bold text-xs text-primary">
+                      {stockInfo.nextSlot.slot} ({stockInfo.minutesToNextSlot}m remaining)
+                    </span>
+                  </div>
+
+                  <button
+                    onClick={handleBroadcastAllVendors}
+                    className="px-3.5 py-2 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                    <span>Broadcast to All 14 Vendors</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Schedule Timeline */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 pt-2 border-t border-outline-variant/20">
+                {STOCK_NOTIFICATION_SLOTS.map(slot => {
+                  const isCurrent = stockInfo.currentSlot.slot === slot.slot;
+                  return (
+                    <div 
+                      key={slot.slot}
+                      className={`p-2.5 rounded-xl border text-xs flex flex-col justify-between ${
+                        isCurrent 
+                          ? 'bg-amber-500/10 border-amber-500/40 shadow-xs' 
+                          : 'bg-surface-container-lowest border-outline-variant/25'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono font-bold text-on-surface">{slot.slot}</span>
+                        {isCurrent && (
+                          <span className="text-[9px] bg-amber-500 text-white px-1.5 py-0.2 rounded font-bold">ACTIVE</span>
+                        )}
+                      </div>
+                      <span className="text-[10px] text-on-surface-variant mt-1 truncate">{slot.label}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Selected Vendor Quick Ping Card */}
+            <div className="p-4 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <span className="text-[11px] text-on-surface-variant font-semibold">Active Selected Kitchen:</span>
+                <h5 className="font-headline font-bold text-base text-on-surface flex items-center gap-2">
+                  <span>{currentVendor.name}</span>
+                  <span className="text-xs font-mono font-normal text-on-surface-variant">({currentVendor.phone})</span>
+                </h5>
+                <p className="text-xs text-on-surface-variant mt-0.5">
+                  Status: {confirmedSlots[currentVendor.id] ? (
+                    <span className="text-emerald-600 font-bold">✓ {confirmedSlots[currentVendor.id]}</span>
+                  ) : (
+                    <span className="text-amber-700 font-bold">Pending confirmation for {stockInfo.currentSlot.slot}</span>
+                  )}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 flex-wrap">
+                <a
+                  href={buildVendorStockPromptWhatsAppUrl(
+                    currentVendor.phone, 
+                    currentVendor.name, 
+                    currentVendor.menuOfferings.map(m => ({ name: m.name, inStock: isDishInStock(m) })), 
+                    stockInfo.currentSlot.slot
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3.5 py-2 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  <span>Send WhatsApp Alert</span>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => handleAdminVerifyVendorStock(currentVendor.id, currentVendor.name)}
+                  className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>Mark Confirmed (Phone Call)</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Network-wide Stock Verification Table */}
+            <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 overflow-hidden shadow-xs">
+              <div className="p-4 border-b border-outline-variant/20 flex items-center justify-between">
+                <h5 className="font-headline font-bold text-sm text-on-surface flex items-center gap-2">
+                  <span>Lokoja Kitchens Stock Status ({vendors.length} Vendors)</span>
+                </h5>
+                <span className="text-xs text-on-surface-variant">
+                  {Object.keys(confirmedSlots).length} / {vendors.length} confirmed today
+                </span>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-surface-container-low text-on-surface-variant font-bold border-b border-outline-variant/20">
+                    <tr>
+                      <th className="p-3">Vendor / Location</th>
+                      <th className="p-3">Manager Phone</th>
+                      <th className="p-3">10am Pots Ready</th>
+                      <th className="p-3">{stockInfo.currentSlot.slot} Verification</th>
+                      <th className="p-3 text-right">Dispatch Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-outline-variant/15">
+                    {vendors.map(v => {
+                      const isConfirmed = !!confirmedSlots[v.id];
+                      return (
+                        <tr key={v.id} className="hover:bg-surface-container-lowest transition-colors">
+                          <td className="p-3">
+                            <span className="font-bold text-on-surface block">{v.name}</span>
+                            <span className="text-[11px] text-on-surface-variant flex items-center gap-1">
+                              <MapPin className="w-3 h-3 text-amber-700" />
+                              {v.address}
+                            </span>
+                          </td>
+                          <td className="p-3 font-mono text-[11px]">
+                            {v.phone}
+                          </td>
+                          <td className="p-3">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 font-bold text-[10px]">
+                              <CheckCircle2 className="w-3 h-3" /> Warmers Ready
+                            </span>
+                          </td>
+                          <td className="p-3">
+                            {isConfirmed ? (
+                              <span className="text-emerald-700 dark:text-emerald-300 font-bold flex items-center gap-1 text-[11px]">
+                                <CheckCheck className="w-3.5 h-3.5 text-emerald-600" />
+                                Confirmed
+                              </span>
+                            ) : (
+                              <span className="text-amber-800 dark:text-amber-300 font-semibold text-[11px] flex items-center gap-1">
+                                <Clock className="w-3.5 h-3.5 text-amber-600" />
+                                Awaiting ping
+                              </span>
+                            )}
+                          </td>
+                          <td className="p-3 text-right">
+                            <div className="flex items-center justify-end gap-1.5">
+                              <a
+                                href={buildVendorStockPromptWhatsAppUrl(
+                                  v.phone,
+                                  v.name,
+                                  v.menuOfferings.map(m => ({ name: m.name, inStock: isDishInStock(m) })),
+                                  stockInfo.currentSlot.slot
+                                )}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-2.5 py-1 rounded-lg bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-[11px] flex items-center gap-1 transition-all"
+                                title="Send WhatsApp prompt to vendor"
+                              >
+                                <Send className="w-3 h-3" />
+                                <span>Ping WA</span>
+                              </a>
+
+                              <button
+                                type="button"
+                                onClick={() => handleAdminVerifyVendorStock(v.id, v.name)}
+                                className="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-semibold text-[11px] border border-outline-variant/30 cursor-pointer"
+                              >
+                                Confirm
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}

@@ -35,17 +35,25 @@ The platform empowers local restaurant owners, bukas, and caterers by eliminatin
   - Multi-vendor orders provide both consolidated and itemized kitchen transfer instructions with quick copy buttons for bank name, account number, and exact amounts.
 - **Voluntary 5% – 8.5% Vendor Remittance**: Vendors voluntarily remit a modest platform maintenance fee weekly from their verified earnings. 0% is deducted at source.
 
-### 3. Comprehensive Logistics & Neighborhood Coverage
+### 3. Kitchen Operations: 10:00 AM Ready Pots & 2-Hourly WhatsApp Stock Synchronizer
+- **Hot Pots Ready Since 10:00 AM**: In Lokoja, authentic bukas and restaurants have their morning batches of soups (Egusi, Ogbono, Bitterleaf, Ewedu, Catfish), party jollof, fried rice, and swallows cooked and held hot in kitchen warmers by 10:00 AM. Orders do not wait for raw cooking from scratch; packaging turnaround is just 3–7 minutes.
+- **2-Hourly WhatsApp Stock Verification Schedule (10am, 12pm, 2pm, 4pm, 6pm, 8pm)**:
+  - Central Dispatch automatically prompts every vendor on their direct WhatsApp line every 2 hours.
+  - Kitchen managers verify what pots remain in stock or mark sold-out items in 1 tap on their Vendor Hub.
+  - Diners never experience canceled orders due to finished soups or rice.
+- **Thermal Warmth Guarantee**: Heavy-duty insulated boxes keep food piping hot (≥65°C) across Lokoja's terrain.
+
+### 4. Comprehensive Logistics & Neighborhood Coverage
 - **Three-Tier Delivery Zones**:
   - **Tier 1 (Core Lokoja)**: Post Office, Paparanda Square, Lokongoma, Adankolo, GRA (20–35 min ETA).
   - **Tier 2 (Extended Corridor)**: Felele, Ganaja Road, Crusher, Zone 8, State Secretariat (35–45 min ETA).
   - **Tier 3 (Outer Transit)**: Nataco Junction, Zango Daji, FULokoja Felele Campus, Salem University corridor (45–60 min ETA).
 - **Rider Dispatch Dashboard**: Couriers claim active runs, navigate between multiple kitchen pickup locations, and confirm delivery hot to customer doors.
 
-### 4. Role-Based Workspaces & Portals
+### 5. Role-Based Workspaces & Portals
 - **Diner Marketplace**: Browse 14+ authentic bukas, filter by dietary preferences and delivery speeds, search dishes, and save favorites.
-- **Vendor Kitchen Hub**: Live 4-column order fulfillment pipeline (Pending Confirmation, Cooking, Packed, Dispatched), sales analytics with interactive Recharts volume visualizations, and remittance calculator.
-- **Administrative Command Center**: Oversee platform GMV, audit vendor compliance, supervise store operations, and monitor delivery SLA metrics.
+- **Vendor Kitchen Hub**: Live 4-column order fulfillment pipeline (Pending Confirmation, Cooking, Packed, Dispatched), 2-hourly WhatsApp stock status synchronizer, sales analytics with interactive Recharts volume visualizations, and remittance calculator.
+- **Administrative Command Center**: Oversee platform GMV, broadcast 2-hourly stock pings to all 14 kitchens, audit vendor compliance, supervise store operations, and monitor delivery SLA metrics.
 - **Rider Terminal**: Real-time batch pickup notifications, multi-point routes, and delivery status logs.
 - **FAQs, Legal & Cost Transparency Hub**: Comprehensive interactive cost calculator, NDPR Privacy Policy, Terms of Service, and Dispute SLA.
 
@@ -115,7 +123,8 @@ lokochop/
 │   │   ├── authData.ts
 │   │   └── mockData.ts
 │   ├── services/
-│   │   └── orderService.ts
+│   │   ├── orderService.ts
+│   │   └── vendorStockService.ts
 │   ├── views/
 │   │   ├── AdminLoginView.tsx
 │   │   ├── AdminPortalView.tsx

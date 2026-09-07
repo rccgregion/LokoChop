@@ -287,6 +287,19 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 </span>
               </div>
 
+              {/* Thermal Packaging & 10am Ready Pots Note */}
+              <div className="p-3 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center justify-between text-[11px] text-on-surface">
+                <div className="flex items-center gap-2">
+                  <span className="text-base">🔥</span>
+                  <div>
+                    <span className="font-bold">Hot Pots Ready Since 10:00 AM:</span> No cooking delays. Fast 3–7 min packaging.
+                  </div>
+                </div>
+                <span className="text-[10px] bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-bold px-2 py-0.5 rounded-full shrink-0">
+                  Thermal Guaranteed
+                </span>
+              </div>
+
               {/* 🚨 TRANSPARENT MULTI-VENDOR NOTIFICATION BANNER */}
               {isMultiVendor && (
                 <div className="p-4 rounded-2xl bg-amber-500/10 border-2 border-amber-500/50 space-y-2 animate-fade-in shadow-xs">

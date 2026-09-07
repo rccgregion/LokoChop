@@ -21,7 +21,7 @@ import {
 
 interface MarketplaceViewProps {
   onAddToCart: (item: FoodItem) => void;
-  onNavigate: (view: ActiveView) => void;
+  onNavigate: (view: ActiveView, vendorId?: string, zoneKey?: string) => void;
   searchQuery: string;
   favoriteFoodIds?: string[];
   onToggleFavorite?: (id: string) => void;
@@ -687,14 +687,11 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
                     <span className="text-xs font-bold text-tertiary">{rest.zoneText}</span>
                   </div>
                   <button 
+                    id={`order-btn-${rest.id}`}
                     onClick={() => {
-                      if (rest.id === 'chicken-republic' || rest.id === 'craving-spot') {
-                        onNavigate('vendor-storefront');
-                      } else {
-                        onNavigate('vendor-storefront');
-                      }
+                      onNavigate('vendor-storefront', rest.id);
                     }}
-                    className="px-3.5 py-1.5 rounded-lg border border-secondary text-secondary hover:bg-secondary hover:text-on-secondary text-xs font-semibold transition-colors cursor-pointer"
+                    className="px-3.5 py-1.5 rounded-lg border border-secondary text-secondary hover:bg-secondary hover:text-on-secondary text-xs font-semibold transition-colors cursor-pointer active:scale-95"
                   >
                     Order Food
                   </button>
@@ -740,10 +737,12 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
                 </div>
               </div>
               <button 
-                onClick={() => setBrowseTab('food')}
-                className="mt-5 w-full py-2 rounded-lg bg-surface-container-lowest border border-outline-variant/40 text-xs font-bold text-on-surface hover:border-primary transition-colors cursor-pointer"
+                id="order-zone-tier1-btn"
+                onClick={() => onNavigate('zone-directory', undefined, 'tier1')}
+                className="mt-5 w-full py-2.5 rounded-lg bg-surface-container-lowest border border-outline-variant/40 text-xs font-bold text-on-surface hover:border-primary hover:text-primary transition-all cursor-pointer shadow-xs active:scale-95 flex items-center justify-center gap-1.5"
               >
-                Order to this Zone
+                <span>View Vendors in Lokongoma & GRA</span>
+                <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
 
@@ -764,10 +763,12 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
                 </div>
               </div>
               <button 
-                onClick={() => setBrowseTab('food')}
-                className="mt-5 w-full py-2 rounded-lg bg-surface-container-lowest border border-outline-variant/40 text-xs font-bold text-on-surface hover:border-primary transition-colors cursor-pointer"
+                id="order-zone-tier2-btn"
+                onClick={() => onNavigate('zone-directory', undefined, 'tier2')}
+                className="mt-5 w-full py-2.5 rounded-lg bg-surface-container-lowest border border-outline-variant/40 text-xs font-bold text-on-surface hover:border-primary hover:text-primary transition-all cursor-pointer shadow-xs active:scale-95 flex items-center justify-center gap-1.5"
               >
-                Order to this Zone
+                <span>View Vendors in Zone 8 & Sarkin Noma</span>
+                <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
 
@@ -788,10 +789,12 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
                 </div>
               </div>
               <button 
-                onClick={() => setBrowseTab('food')}
-                className="mt-5 w-full py-2 rounded-lg bg-surface-container-lowest border border-outline-variant/40 text-xs font-bold text-on-surface hover:border-primary transition-colors cursor-pointer"
+                id="order-zone-tier3-btn"
+                onClick={() => onNavigate('zone-directory', undefined, 'tier3')}
+                className="mt-5 w-full py-2.5 rounded-lg bg-secondary hover:bg-secondary/90 text-on-secondary text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 flex items-center justify-center gap-1.5"
               >
-                Order to this Zone
+                <span>View Vendors in Felele, Nataco & Ganaja Village</span>
+                <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>

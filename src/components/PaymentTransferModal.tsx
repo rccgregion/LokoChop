@@ -36,6 +36,7 @@ export const PaymentTransferModal: React.FC<PaymentTransferModalProps> = ({
 }) => {
   const [copiedAccountKey, setCopiedAccountKey] = useState<string | null>(null);
   const [sentVendors, setSentVendors] = useState<Record<string, boolean>>({});
+  const [checkedTransfers, setCheckedTransfers] = useState<Record<string, boolean>>({});
   const [supportWhatsAppSent, setSupportWhatsAppSent] = useState(false);
 
   if (!isOpen || !order) return null;
@@ -44,6 +45,10 @@ export const PaymentTransferModal: React.FC<PaymentTransferModalProps> = ({
     navigator.clipboard?.writeText(text);
     setCopiedAccountKey(key);
     setTimeout(() => setCopiedAccountKey(null), 2000);
+  };
+
+  const toggleCheckedTransfer = (key: string) => {
+    setCheckedTransfers(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
   const isMultiVendor = Boolean(order.isMultiVendor && order.vendorShares && order.vendorShares.length > 1);
@@ -71,8 +76,44 @@ export const PaymentTransferModal: React.FC<PaymentTransferModalProps> = ({
           </p>
         </div>
 
+        {/* 3-Step Micro-Timeline Reassurance */}
+        <div className="bg-surface-container-low px-5 py-3 border-b border-outline-variant/30">
+          <div className="grid grid-cols-3 gap-2 text-center text-[10px]">
+            <div className="flex flex-col items-center">
+              <span className="w-5 h-5 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center mb-1">
+                ✓
+              </span>
+              <span className="font-bold text-on-surface">1. Transferred</span>
+              <span className="text-[9px] text-on-surface-variant">From your bank</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="w-5 h-5 rounded-full bg-amber-500 text-white font-bold flex items-center justify-center mb-1 animate-pulse">
+                2
+              </span>
+              <span className="font-bold text-amber-700 dark:text-amber-300">2. Alert Reconcile</span>
+              <span className="text-[9px] text-on-surface-variant">Avg 2–3 mins</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="w-5 h-5 rounded-full bg-surface-container-high text-on-surface-variant font-bold flex items-center justify-center mb-1">
+                3
+              </span>
+              <span className="font-bold text-on-surface">3. Warm Packaging</span>
+              <span className="text-[9px] text-on-surface-variant">Pots ready since 10am</span>
+            </div>
+          </div>
+        </div>
+
         {/* Modal Body */}
         <div className="p-5 sm:p-6 overflow-y-auto custom-scroll space-y-4 text-on-surface">
+          
+          {/* Lokoja Ready Pots Notice */}
+          <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs flex items-start gap-2.5">
+            <span className="text-base">🍲</span>
+            <div className="text-[11px] leading-relaxed">
+              <strong className="text-amber-900 dark:text-amber-300 block">Pots Ready in Food Warmers (Since 10:00 AM)</strong>
+              Kitchens do not cook your food from scratch. As soon as credit confirms, vendors simply ladle and seal tamper-evident packaging in 3–7 minutes!
+            </div>
+          </div>
           
           {/* Multi-Vendor vs Single-Vendor Transfer Summary */}
           {isMultiVendor && order.vendorShares ? (
@@ -159,6 +200,23 @@ export const PaymentTransferModal: React.FC<PaymentTransferModalProps> = ({
                         </div>
                       </div>
                     </div>
+
+                    {/* Quick Transfer Completion Toggle */}
+                    <button
+                      type="button"
+                      onClick={() => toggleCheckedTransfer(share.vendorId)}
+                      className={`w-full py-1.5 px-2.5 rounded-lg border text-[11px] font-bold flex items-center justify-between transition-colors cursor-pointer ${
+                        checkedTransfers[share.vendorId] 
+                          ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-800 dark:text-emerald-300' 
+                          : 'bg-surface-container border-outline-variant/30 text-on-surface-variant hover:text-on-surface'
+                      }`}
+                    >
+                      <span className="flex items-center gap-1.5">
+                        <Check className={`w-3.5 h-3.5 ${checkedTransfers[share.vendorId] ? 'text-emerald-600' : 'text-outline-variant'}`} />
+                        <span>{checkedTransfers[share.vendorId] ? 'Transferred in bank app' : 'Mark as transferred'}</span>
+                      </span>
+                      <span className="font-mono text-[10px]">₦{vendorTotal.toLocaleString()}</span>
+                    </button>
                   </div>
                 );
               })}
@@ -216,12 +274,17 @@ export const PaymentTransferModal: React.FC<PaymentTransferModalProps> = ({
 
           {/* Prompt to send WhatsApp Messages */}
           <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs space-y-1.5">
-            <div className="flex items-center gap-2 text-amber-900 dark:text-amber-300 font-bold">
-              <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
-              <span>Next Step: Alert Kitchens &amp; Support via WhatsApp</span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-amber-900 dark:text-amber-300 font-bold">
+                <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+                <span>⚡ Express WhatsApp Speed-Up (Optional)</span>
+              </div>
+              <span className="text-[9px] bg-amber-500/20 text-amber-800 dark:text-amber-200 px-2 py-0.5 rounded-full font-bold">
+                Optional
+              </span>
             </div>
             <p className="text-on-surface-variant text-[11px] leading-relaxed">
-              Tap the buttons below to dispatch your transfer proof on WhatsApp so {isMultiVendor ? 'each kitchen' : order.vendorName} can immediately verify credit alerts in their mobile banking app and prepare your food!
+              <strong>Stay on app or notify via WhatsApp?</strong> You can proceed directly to <strong>&ldquo;Live Order Tracking&rdquo;</strong> below. Kitchens check incoming mobile alerts automatically. However, tapping below to dispatch your receipt on WhatsApp helps fast-track verification even quicker!
             </p>
           </div>
 

@@ -2,6 +2,7 @@ export type ActiveView =
   | 'marketplace'
   | 'vendor-storefront'
   | 'neighborhoods'
+  | 'zone-directory'
   | 'order-tracking'
   | 'order-history'
   | 'vendor-hub'
@@ -74,6 +75,8 @@ export interface Restaurant {
   primaryOfferings?: string;
   signatureDishes?: string[];
   cluster?: string;
+  subLocality?: string;
+  imageUrl?: string;
 }
 
 export interface NeighborhoodZone {

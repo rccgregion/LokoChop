@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 interface NeighborhoodsViewProps {
-  onNavigate: (view: ActiveView) => void;
+  onNavigate: (view: ActiveView, vendorId?: string, zoneKey?: string) => void;
 }
 
 export const NeighborhoodsView: React.FC<NeighborhoodsViewProps> = ({ onNavigate }) => {
@@ -236,7 +236,10 @@ export const NeighborhoodsView: React.FC<NeighborhoodsViewProps> = ({ onNavigate
               {/* Card Footer Action */}
               <div className="p-5 pt-0 mt-2">
                 <button 
-                  onClick={() => onNavigate('marketplace')}
+                  id={`view-zone-btn-${zone.id}`}
+                  onClick={() => {
+                    onNavigate('zone-directory', undefined, zone.tier);
+                  }}
                   className="w-full h-11 bg-primary-container hover:bg-primary text-on-primary rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-all active:scale-95 shadow-xs cursor-pointer"
                 >
                   <span>View Vendors in {zone.name}</span>

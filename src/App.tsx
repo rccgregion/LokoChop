@@ -11,6 +11,7 @@ import { PortalModal } from './components/PortalModal';
 import { MarketplaceView } from './views/MarketplaceView';
 import { VendorStorefrontView } from './views/VendorStorefrontView';
 import { NeighborhoodsView } from './views/NeighborhoodsView';
+import { ZoneVendorsDirectory } from './components/ZoneVendorsDirectory';
 import { OrderTrackingView } from './views/OrderTrackingView';
 import { OrderHistoryView } from './views/OrderHistoryView';
 import { VendorHubView } from './views/VendorHubView';
@@ -31,6 +32,8 @@ export default function App() {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState<boolean>(false);
   const [isPortalModalOpen, setIsPortalModalOpen] = useState<boolean>(false);
   const [isTermsModalOpen, setIsTermsModalOpen] = useState<boolean>(false);
+  const [selectedVendorId, setSelectedVendorId] = useState<string>('craving-spot');
+  const [selectedZoneKey, setSelectedZoneKey] = useState<string>('tier3');
 
   // Auth Sessions for Vendor and Admin Portals
   const [vendorUser, setVendorUser] = useState<VendorUser | null>(() => {
@@ -208,7 +211,13 @@ export default function App() {
     // Order confirmed
   };
 
-  const handleNavigate = (view: ActiveView) => {
+  const handleNavigate = (view: ActiveView, vendorId?: string, zoneKey?: string) => {
+    if (vendorId) {
+      setSelectedVendorId(vendorId);
+    }
+    if (zoneKey) {
+      setSelectedZoneKey(zoneKey);
+    }
     setCurrentView(view);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -245,11 +254,23 @@ export default function App() {
 
         {currentView === 'vendor-storefront' && (
           <VendorStorefrontView
+            selectedVendorId={selectedVendorId}
             onAddToCart={handleAddToCart}
             cartItems={cartItems}
             onUpdateQuantity={handleUpdateQuantity}
             onOpenCart={() => setIsCartOpen(true)}
             onNavigate={handleNavigate}
+            favoriteFoodIds={favoriteFoodIds}
+            onToggleFavorite={handleToggleFavorite}
+          />
+        )}
+
+        {currentView === 'zone-directory' && (
+          <ZoneVendorsDirectory
+            zoneKey={selectedZoneKey}
+            onSelectVendor={(vendorId) => handleNavigate('vendor-storefront', vendorId)}
+            onAddToCart={handleAddToCart}
+            onBack={() => handleNavigate('marketplace')}
             favoriteFoodIds={favoriteFoodIds}
             onToggleFavorite={handleToggleFavorite}
           />

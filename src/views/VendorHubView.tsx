@@ -45,8 +45,20 @@ import {
   ArrowUpRight,
   ShieldCheck,
   Calendar,
-  ArrowLeft
+  ArrowLeft,
+  Send,
+  Radio,
+  Timer
 } from 'lucide-react';
+import { 
+  getCurrentAndNextStockSlot, 
+  STOCK_NOTIFICATION_SLOTS, 
+  buildVendorStockPromptWhatsAppUrl, 
+  buildVendorStockConfirmationToSupportUrl, 
+  recordVendorStockConfirmation, 
+  getVendorLastConfirmedTimes,
+  setDishStockStatus 
+} from '../services/vendorStockService';
 
 interface VendorHubViewProps {
   onNavigate: (view: ActiveView) => void;
@@ -157,6 +169,36 @@ export const VendorHubView: React.FC<VendorHubViewProps> = ({
   const [liveOrders, setLiveOrders] = useState<LiveOrder[]>([]);
   const [selectedOrderForConfirmation, setSelectedOrderForConfirmation] = useState<LiveOrder | null>(null);
   const [isConfirmPaymentModalOpen, setIsConfirmPaymentModalOpen] = useState(false);
+
+  // 2-Hourly Stock Verification Schedule State (10am, 12pm, 2pm, 4pm, 6pm, 8pm)
+  const [stockInfo, setStockInfo] = useState(() => getCurrentAndNextStockSlot());
+  const [confirmedSlots, setConfirmedSlots] = useState<Record<string, string>>(() => getVendorLastConfirmedTimes());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setStockInfo(getCurrentAndNextStockSlot());
+    }, 30000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleConfirmStockSlot = (slotTime: string) => {
+    recordVendorStockConfirmation(profile.vendorId, slotTime);
+    setConfirmedSlots(getVendorLastConfirmedTimes());
+    showToast(`Stock verified for ${slotTime} slot! Central Dispatch notified.`);
+  };
+
+  const handleBulkSetAllStock = (inStock: boolean) => {
+    const updatedItems = (profile.menuItems || []).map(item => {
+      setDishStockStatus(item.id, inStock);
+      return { ...item, inStock };
+    });
+    const updated: VendorUser = { ...profile, menuItems: updatedItems };
+    setProfile(updated);
+    if (onUpdateVendorUser) {
+      onUpdateVendorUser(updated);
+    }
+    showToast(`All ${updatedItems.length} dishes marked as ${inStock ? 'IN STOCK (Pots Warm)' : 'SOLD OUT'}.`);
+  };
 
   useEffect(() => {
     const unsub = orderService.subscribeToVendorOrders(profile.vendorName || profile.vendorId, (orders) => {
@@ -269,9 +311,13 @@ export const VendorHubView: React.FC<VendorHubViewProps> = ({
 
   // Toggle Stock for a dish
   const handleToggleItemStock = (itemId: string) => {
+    const target = (profile.menuItems || []).find(i => i.id === itemId);
+    const nextStock = target ? !target.inStock : true;
+    setDishStockStatus(itemId, nextStock);
+
     const updatedItems = (profile.menuItems || []).map(item => {
       if (item.id === itemId) {
-        return { ...item, inStock: !item.inStock };
+        return { ...item, inStock: nextStock };
       }
       return item;
     });
@@ -280,8 +326,7 @@ export const VendorHubView: React.FC<VendorHubViewProps> = ({
     if (onUpdateVendorUser) {
       onUpdateVendorUser(updated);
     }
-    const target = updatedItems.find(i => i.id === itemId);
-    showToast(`${target?.name}: Status changed to ${target?.inStock ? 'IN STOCK' : 'SOLD OUT'}`);
+    showToast(`${target?.name}: Status changed to ${nextStock ? 'IN STOCK' : 'SOLD OUT'}`);
   };
 
   // Update Price of an item
@@ -687,6 +732,104 @@ export const VendorHubView: React.FC<VendorHubViewProps> = ({
 
       </div>
 
+      {/* ⏰ 2-HOURLY WHATSAPP STOCK NOTIFICATION & READY POTS BANNER */}
+      <div className="bg-surface-container-lowest rounded-3xl border-2 border-primary/25 p-4 sm:p-5 shadow-xs space-y-3">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-outline-variant/20 pb-3">
+          <div className="flex items-start sm:items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+              <Radio className="w-5 h-5 animate-pulse" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="font-headline text-sm sm:text-base font-bold text-on-surface">
+                  2-Hourly WhatsApp Stock Synchronizer
+                </h3>
+                <span className="text-[10px] bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <Check className="w-3 h-3" /> Pots Ready Since 10:00 AM
+                </span>
+                <span className="text-[10px] bg-primary/10 text-primary font-bold px-2 py-0.5 rounded-full">
+                  Slot: {stockInfo.currentSlot.slot} ({stockInfo.currentSlot.label})
+                </span>
+              </div>
+              <p className="text-[11px] text-on-surface-variant mt-0.5 leading-relaxed">
+                By 10:00 AM, food is ready in kitchen warmers. To guarantee customers never order finished pots, kitchens receive 2-hourly alerts on WhatsApp ({profile.phone}) to confirm available dishes.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 self-start md:self-auto shrink-0">
+            <div className="text-right">
+              <span className="text-[10px] text-on-surface-variant font-medium block">Next Stock Ping:</span>
+              <span className="font-mono font-bold text-xs text-primary">
+                {stockInfo.nextSlot.slot} ({stockInfo.minutesToNextSlot}m remaining)
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* WhatsApp Alert & Confirmation Actions */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pt-1">
+          <div className="flex items-center gap-2 flex-wrap text-xs">
+            <span className="text-on-surface-variant text-[11px] font-medium">Quick Verification:</span>
+            {confirmedSlots[profile.vendorId] ? (
+              <span className="text-[11px] text-emerald-700 dark:text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-1 rounded-lg font-bold flex items-center gap-1">
+                <Check className="w-3.5 h-3.5 text-emerald-600" />
+                {confirmedSlots[profile.vendorId]}
+              </span>
+            ) : (
+              <button
+                type="button"
+                onClick={() => handleConfirmStockSlot(stockInfo.currentSlot.slot)}
+                className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95 transition-all"
+              >
+                <Check className="w-3.5 h-3.5" />
+                <span>Mark All Pots Ready &amp; In-Stock</span>
+              </button>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setActiveHubTab('menu')}
+              className="px-2.5 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-semibold text-xs border border-outline-variant/30 transition-colors cursor-pointer"
+            >
+              Manage Dish Toggles
+            </button>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <a
+              href={buildVendorStockPromptWhatsAppUrl(
+                profile.phone, 
+                profile.vendorName, 
+                (profile.menuItems || []).map(m => ({ name: m.name, inStock: m.inStock })), 
+                stockInfo.currentSlot.slot
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 sm:flex-initial px-3.5 py-1.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-headline text-xs font-bold shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+            >
+              <Send className="w-3.5 h-3.5" />
+              <span>Ping My WhatsApp ({profile.phone})</span>
+            </a>
+
+            <a
+              href={buildVendorStockConfirmationToSupportUrl(
+                profile.vendorName, 
+                (profile.menuItems || []).filter(i => i.inStock).length,
+                (profile.menuItems || []).filter(i => !i.inStock).map(i => i.name),
+                stockInfo.currentSlot.slot
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 sm:flex-initial px-3.5 py-1.5 rounded-xl bg-stone-900 hover:bg-black text-white text-xs font-bold shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 border border-stone-700"
+            >
+              <MessageSquare className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Notify Central Dispatch</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
       {/* Hub Navigation Tabs */}
       <div className="flex items-center gap-2 overflow-x-auto custom-scroll border-b border-outline-variant/30 pb-3">
         {[
@@ -981,6 +1124,83 @@ export const VendorHubView: React.FC<VendorHubViewProps> = ({
               <Plus className="w-4 h-4" />
               <span>Add New Item</span>
             </button>
+          </div>
+        </div>
+
+        {/* 2-Hourly WhatsApp Stock Schedule Track */}
+        <div className="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 className="font-headline text-xs font-bold text-on-surface flex items-center gap-1.5">
+                <Timer className="w-4 h-4 text-primary" />
+                <span>2-Hourly WhatsApp Stock Broadcast Schedule</span>
+              </h3>
+              <p className="text-[11px] text-on-surface-variant">
+                Alerts dispatched every 2 hours to {profile.phone}. Confirm what dishes remain in your pots.
+              </p>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => handleBulkSetAllStock(true)}
+                className="px-2.5 py-1 rounded-lg bg-emerald-600/15 hover:bg-emerald-600/25 text-emerald-800 dark:text-emerald-200 text-[11px] font-bold border border-emerald-600/30 transition-all cursor-pointer"
+              >
+                ✓ All In Stock (Pots Ready)
+              </button>
+              <button
+                type="button"
+                onClick={() => handleBulkSetAllStock(false)}
+                className="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant text-[11px] font-semibold border border-outline-variant/30 transition-all cursor-pointer"
+              >
+                Mark All Sold Out
+              </button>
+            </div>
+          </div>
+
+          {/* Slots Bar */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+            {STOCK_NOTIFICATION_SLOTS.map(slot => {
+              const isCurrent = stockInfo.currentSlot.slot === slot.slot;
+              const isConfirmed = !!confirmedSlots[slot.slot];
+
+              return (
+                <div 
+                  key={slot.slot}
+                  className={`p-2.5 rounded-xl border text-xs flex flex-col justify-between transition-all ${
+                    isCurrent 
+                      ? 'bg-primary-fixed/20 border-primary shadow-xs' 
+                      : isConfirmed 
+                      ? 'bg-emerald-500/10 border-emerald-500/30' 
+                      : 'bg-surface-container-lowest border-outline-variant/25'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono font-bold text-on-surface text-[11px]">{slot.slot}</span>
+                    {isCurrent ? (
+                      <span className="text-[9px] bg-primary text-white px-1.5 py-0.2 rounded font-bold">ACTIVE</span>
+                    ) : isConfirmed ? (
+                      <span className="text-[9px] text-emerald-700 font-bold">✓ DONE</span>
+                    ) : (
+                      <span className="text-[9px] text-outline">PENDING</span>
+                    )}
+                  </div>
+                  <span className="text-[10px] text-on-surface-variant font-medium mt-1 truncate">
+                    {slot.label}
+                  </span>
+                  
+                  {isCurrent && !isConfirmed && (
+                    <button
+                      type="button"
+                      onClick={() => handleConfirmStockSlot(slot.slot)}
+                      className="mt-2 py-1 px-1.5 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] cursor-pointer text-center"
+                    >
+                      Confirm Now
+                    </button>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
 
