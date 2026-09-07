@@ -16,7 +16,10 @@ import {
   ShieldCheck,
   ChevronRight,
   ArrowRight,
-  Heart
+  Heart,
+  Clock,
+  Copy,
+  Sparkles
 } from 'lucide-react';
 
 interface MarketplaceViewProps {
@@ -39,6 +42,16 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
   const [selectedTag, setSelectedTag] = useState<string>('all');
   const [quickFilter, setQuickFilter] = useState<string>('none');
   const [addedItemNotice, setAddedItemNotice] = useState<string | null>(null);
+
+  const CATERING_WHATSAPP_PHONE = '2349074072454';
+  const CATERING_WHATSAPP_MESSAGE = `Hi LokoChop! I'm hosting an event in Lokoja and need a caterer. Here are my details:
+Event type:
+Date:
+Number of guests:
+Location/venue:
+Budget range:
+Please connect me with a suitable vendor. Thanks!`;
+  const CATERING_WHATSAPP_URL = `https://wa.me/${CATERING_WHATSAPP_PHONE}?text=${encodeURIComponent(CATERING_WHATSAPP_MESSAGE)}`;
 
   const handleAdd = (item: FoodItem) => {
     onAddToCart(item);
@@ -114,40 +127,69 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
   return (
     <div className="space-y-6">
       
-      {/* Lokoja Delivery Tier Notification Strip */}
-      <aside aria-label="Delivery tier tariffs" className="bg-surface-container-high border-b border-outline-variant/30 text-on-surface py-2.5 px-4 shadow-xs">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2 text-xs">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-tertiary text-on-tertiary">
-              <Bike className="w-3 h-3" />
-            </span>
-            <span className="font-bold text-on-surface">Lokoja Delivery Zones &amp; Official Rider Tariffs:</span>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 lg:gap-4 font-body-sm text-xs">
-            <div className="flex items-center gap-1.5 bg-surface-container-lowest px-2.5 py-1 rounded-md border border-outline-variant/30">
-              <span className="w-2 h-2 rounded-full bg-tertiary"></span>
-              <span className="font-semibold text-tertiary">Tier 1 Core:</span>
-              <span className="text-on-surface-variant">Paparanda, Lokongoma, GRA, Adankolo</span>
-              <span className="font-bold text-primary font-price-display">₦800</span>
-              <span className="text-[10px] text-on-surface-variant font-medium">(10–15m)</span>
+      {/* Event Catering & Feeding a Crowd in Lokoja Hero Section */}
+      <section 
+        id="event-catering-hero"
+        aria-label="Event catering and bulk food logistics in Lokoja" 
+        className="max-w-7xl mx-auto px-4 md:px-6 pt-1"
+      >
+        <div className="relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-surface-container-lowest via-surface-container/50 to-primary/5 p-5 sm:p-6 shadow-2xs">
+          
+          <div className="relative z-10 space-y-3.5 w-full">
+            
+            {/* Tagline Badge */}
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold tracking-wide">
+              <Sparkles className="w-3 h-3 text-primary" />
+              <span>Event Catering &bull; Lokoja Metro</span>
             </div>
-            <div className="flex items-center gap-1.5 bg-surface-container-lowest px-2.5 py-1 rounded-md border border-outline-variant/30">
-              <span className="w-2 h-2 rounded-full bg-secondary"></span>
-              <span className="font-semibold text-secondary">Tier 2 Mid:</span>
-              <span className="text-on-surface-variant">Sarkin Noma, Zone 8, Kabawa</span>
-              <span className="font-bold text-primary font-price-display">₦1,200</span>
-              <span className="text-[10px] text-on-surface-variant font-medium">(15–25m)</span>
+
+            {/* Main Header, Subheading, and Body Text (Full width, no empty right space, 2 lines) */}
+            <div className="space-y-1.5 w-full">
+              <h1 className="font-headline text-xl sm:text-2xl lg:text-3xl font-extrabold text-on-surface tracking-tight leading-snug">
+                🎉 Hosting an Event or Feeding a Crowd in Lokoja? 🍲
+              </h1>
+              <p className="text-primary font-bold text-sm sm:text-base leading-snug">
+                Weddings, corporate workshops, big hangouts — don&apos;t let food logistics stress you out.
+              </p>
+              <p className="text-on-surface-variant text-xs sm:text-sm lg:text-[14px] leading-relaxed w-full">
+                LokoChop connects you instantly with Lokoja&apos;s top fast-food chains and premium caterers for bulk food boxes, custom cakes, and small chops, tailored to your budget. We handle the cooking and delivery so you can focus on your guests.
+              </p>
             </div>
-            <div className="flex items-center gap-1.5 bg-surface-container-lowest px-2.5 py-1 rounded-md border border-outline-variant/30">
-              <span className="w-2 h-2 rounded-full bg-primary"></span>
-              <span className="font-semibold text-primary">Tier 3 Edge:</span>
-              <span className="text-on-surface-variant">Nataco, Felele, Ganaja Village</span>
-              <span className="font-bold text-primary font-price-display">₦2,000</span>
-              <span className="text-[10px] text-on-surface-variant font-medium">(25–40m)</span>
+
+            {/* Value Badges & Chat on WhatsApp Button side-by-side in one inline row */}
+            <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-outline-variant/20">
+              <div className="inline-flex items-center gap-1.5 bg-surface-container-lowest border border-outline-variant/30 rounded-lg px-2.5 py-1.5 text-xs text-on-surface shadow-2xs">
+                <span className="text-sm">⏱️</span>
+                <span className="font-semibold">Punctual delivery, metro-wide</span>
+              </div>
+
+              <div className="inline-flex items-center gap-1.5 bg-surface-container-lowest border border-outline-variant/30 rounded-lg px-2.5 py-1.5 text-xs text-on-surface shadow-2xs">
+                <span className="text-sm">🍗</span>
+                <span className="font-semibold">Verified, premium vendors</span>
+              </div>
+
+              <div className="inline-flex items-center gap-1.5 bg-surface-container-lowest border border-outline-variant/30 rounded-lg px-2.5 py-1.5 text-xs text-on-surface shadow-2xs">
+                <span className="text-sm">💰</span>
+                <span className="font-semibold">Bulk discount rates</span>
+              </div>
+
+              {/* Chat on WhatsApp button directly beside the badges */}
+              <a
+                id="catering-whatsapp-btn"
+                href={CATERING_WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#20ba5a] text-white px-3.5 py-1.5 rounded-lg font-bold text-xs shadow-2xs hover:shadow-xs transition-all active:scale-95 shrink-0 whitespace-nowrap cursor-pointer"
+                title="Chat on WhatsApp (+234 907 407 2454)"
+              >
+                <MessageCircle className="w-3.5 h-3.5 fill-white text-white" />
+                <span>Chat on WhatsApp</span>
+              </a>
             </div>
+
           </div>
         </div>
-      </aside>
+      </section>
 
       {/* Added to cart toast notification */}
       {addedItemNotice && (
@@ -171,7 +213,7 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
               <h1 className="font-headline text-3xl sm:text-4xl lg:text-5xl text-on-surface font-bold tracking-tight leading-tight">
                 Confluence food, delivered hot &amp; ready across Lokoja.
               </h1>
-              <p className="text-on-surface-variant text-sm sm:text-base max-w-xl leading-relaxed">
+              <p className="text-on-surface-variant text-sm sm:text-base leading-relaxed">
                 Freshly pounded yam, sizzling Confluence river catfish, charcoal suya, and Mama&apos;s authentic firewood jollof. Straight from the pot to your doorstep in Lokongoma, Adankolo, GRA, and beyond.
               </p>
             </div>

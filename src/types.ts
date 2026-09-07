@@ -133,6 +133,16 @@ export interface VendorMenuItem {
   description?: string;
 }
 
+export interface VendorAddOn {
+  id: string;
+  name: string;
+  category: 'drink' | 'side' | 'extra';
+  price: number;
+  available: boolean;
+  description?: string;
+  icon?: string;
+}
+
 export interface VendorUser {
   id: string;
   vendorId: string;
@@ -153,6 +163,7 @@ export interface VendorUser {
   prepTimeMins?: number;
   commissionRate?: number;
   menuItems?: VendorMenuItem[];
+  addOns?: VendorAddOn[];
 }
 
 export interface ApprovedVendorAccount {

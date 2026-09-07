@@ -202,6 +202,10 @@ export default function App() {
     setCartItems(prev => prev.filter(it => it.id !== id));
   };
 
+  const handleEmptyCart = () => {
+    setCartItems([]);
+  };
+
   const handleReorderItems = (items: CartItem[]) => {
     setCartItems(items);
     setIsCartOpen(true);
@@ -370,6 +374,7 @@ export default function App() {
         items={cartItems}
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveItem={handleRemoveItem}
+        onEmptyCart={handleEmptyCart}
         onConfirmPayment={handleConfirmPayment}
         onNavigate={handleNavigate}
         onOpenTerms={() => setIsTermsModalOpen(true)}

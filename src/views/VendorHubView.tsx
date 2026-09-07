@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { ActiveView, VendorUser, VendorMenuItem, VendorRemittanceRecord, CateringInquiry } from '../types';
+import { ActiveView, VendorUser, VendorMenuItem, VendorRemittanceRecord, CateringInquiry, VendorAddOn } from '../types';
 import { APPROVED_LOKOJA_VENDORS } from '../data/approvedVendors';
 import { INITIAL_REMITTANCES, INITIAL_CATERING_INQUIRIES } from '../data/reviewsAndInquiries';
 import { VendorRemittanceModal } from '../components/VendorRemittanceModal';
@@ -7,6 +7,8 @@ import { CustomerReviews } from '../components/CustomerReviews';
 import { orderService, LiveOrder } from '../services/orderService';
 import { VendorConfirmPaymentModal } from '../components/VendorConfirmPaymentModal';
 import { VendorAnalyticsDashboard } from '../components/VendorAnalyticsDashboard';
+import { VendorAddOnsManager } from '../components/VendorAddOnsManager';
+import { getVendorAddOns, saveVendorAddOns } from '../services/addOnsService';
 import { 
   Store, 
   CreditCard, 
@@ -208,7 +210,42 @@ export const VendorHubView: React.FC<VendorHubViewProps> = ({
   }, [profile.vendorName, profile.vendorId]);
 
   // Hub Active Navigation Tab
-  const [activeHubTab, setActiveHubTab] = useState<'pipeline' | 'analytics' | 'menu' | 'remittances' | 'catering' | 'reviews'>('pipeline');
+  const [activeHubTab, setActiveHubTab] = useState<'pipeline' | 'analytics' | 'menu' | 'addons' | 'remittances' | 'catering' | 'reviews'>('pipeline');
+
+  // Vendor Add-Ons & Pricing state
+  const [vendorAddOns, setVendorAddOns] = useState<VendorAddOn[]>(() => getVendorAddOns(profile.vendorId));
+
+  const handleToggleAddOnAvailability = (id: string) => {
+    const updated = vendorAddOns.map(a => a.id === id ? { ...a, available: !a.available } : a);
+    setVendorAddOns(updated);
+    saveVendorAddOns(profile.vendorId, updated);
+    showToast(`Add-on availability updated.`);
+  };
+
+  const handleUpdateAddOnPrice = (id: string, newPrice: number) => {
+    const updated = vendorAddOns.map(a => a.id === id ? { ...a, price: newPrice } : a);
+    setVendorAddOns(updated);
+    saveVendorAddOns(profile.vendorId, updated);
+    showToast(`Add-on price updated to ₦${newPrice.toLocaleString()}! Synced to customer cart.`);
+  };
+
+  const handleAddCustomAddOn = (newAddOn: Omit<VendorAddOn, 'id'>) => {
+    const created: VendorAddOn = {
+      ...newAddOn,
+      id: `custom-${Date.now()}`
+    };
+    const updated = [created, ...vendorAddOns];
+    setVendorAddOns(updated);
+    saveVendorAddOns(profile.vendorId, updated);
+    showToast(`Custom add-on "${newAddOn.name}" added to cart offerings!`);
+  };
+
+  const handleDeleteCustomAddOn = (id: string) => {
+    const updated = vendorAddOns.filter(a => a.id !== id);
+    setVendorAddOns(updated);
+    saveVendorAddOns(profile.vendorId, updated);
+    showToast(`Add-on removed.`);
+  };
 
   // Vendor Remittance State
   const [isRemittanceModalOpen, setIsRemittanceModalOpen] = useState(false);

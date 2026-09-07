@@ -69,6 +69,13 @@ export interface LiveOrder {
   customerConfirmedAt?: string;
   vendorVerifiedAt?: string;
   specialNote?: string;
+  cutleryIncluded?: boolean;
+  riderTip?: number;
+  deliverySchedule?: {
+    type: 'asap' | 'scheduled';
+    slotTime?: string;
+    date?: string;
+  };
   riderName?: string;
   riderPhone?: string;
   riderPickedUpAt?: string;

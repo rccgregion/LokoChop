@@ -2,20 +2,12 @@ import React, { useState } from 'react';
 import { ActiveView, VendorUser, AdminUser } from '../types';
 import { 
   Waves, 
-  MapPin, 
   Search, 
-  Store, 
   ShoppingBag, 
   Bell, 
-  Layers,
   Lock,
   X,
-  ChevronDown,
-  Clock,
-  UtensilsCrossed,
-  ShieldCheck,
-  Bike,
-  HelpCircle
+  ShieldCheck
 } from 'lucide-react';
 
 interface TopNavBarProps {
@@ -25,7 +17,7 @@ interface TopNavBarProps {
   cartTotal: number;
   onOpenCart: () => void;
   onOpenNotifications: () => void;
-  onOpenPortalModal: () => void;
+  onOpenPortalModal?: () => void;
   searchQuery: string;
   onSearchChange: (q: string) => void;
   vendorUser?: VendorUser | null;
@@ -39,7 +31,6 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
   cartTotal,
   onOpenCart,
   onOpenNotifications,
-  onOpenPortalModal,
   searchQuery,
   onSearchChange,
   vendorUser,
@@ -86,25 +77,6 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
               </span>
             </div>
           </button>
-
-          {/* Location Dropdown Picker */}
-          <button 
-            onClick={() => onNavigate('neighborhoods')}
-            className="hidden lg:flex items-center gap-1.5 bg-surface-container-low hover:bg-surface-container border border-outline-variant/30 rounded-2xl px-3 py-1.5 cursor-pointer transition-all text-xs text-left group shadow-2xs"
-            title="View Lokoja Delivery Zones & Dispatch Speed"
-          >
-            <div className="w-5 h-5 rounded-lg bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0">
-              <MapPin className="w-3 h-3 text-tertiary" />
-            </div>
-            <div className="flex flex-col text-[11px] leading-tight">
-              <span className="text-[10px] text-on-surface-variant font-normal">Deliver to</span>
-              <span className="font-bold text-on-surface group-hover:text-primary transition-colors">Lokongoma, Lokoja</span>
-            </div>
-            <span className="ml-1 px-1.5 py-0.5 rounded-md text-[9px] bg-tertiary/15 text-tertiary font-bold tracking-wide">
-              Tier 1 • ₦500
-            </span>
-            <ChevronDown className="w-3 h-3 text-on-surface-variant/60 group-hover:text-on-surface transition-transform" />
-          </button>
         </div>
 
         {/* Center Search Bar (Desktop & Tablet) */}
@@ -115,7 +87,7 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
               type="text"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="Search Chicken Republic, Mama Ngozi, Suya, Shawarma..."
+              placeholder="Search Chicken Republic, Craving Spot, Shawarma, Suya..."
               className="w-full bg-surface-container-low/70 hover:bg-surface-container-low focus:bg-surface-container-lowest text-on-surface placeholder:text-on-surface-variant/70 text-xs pl-10 pr-9 py-2.5 rounded-2xl border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-2xs"
             />
             {searchQuery ? (
@@ -137,71 +109,6 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
         {/* Right Navigation & Quick Actions */}
         <div className="flex items-center gap-1.5 sm:gap-2.5">
           
-          {/* Main Desktop Links */}
-          <nav className="hidden xl:flex items-center gap-1 text-xs font-semibold">
-            <button 
-              onClick={() => onNavigate('marketplace')}
-              className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
-                currentView === 'marketplace' 
-                  ? 'bg-primary/10 text-primary font-bold shadow-2xs' 
-                  : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container/60'
-              }`}
-            >
-              Marketplace
-            </button>
-            <button 
-              onClick={() => onNavigate('vendor-storefront')}
-              className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
-                currentView === 'vendor-storefront' 
-                  ? 'bg-primary/10 text-primary font-bold shadow-2xs' 
-                  : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container/60'
-              }`}
-            >
-              Mama Ngozi's
-            </button>
-            <button 
-              onClick={() => onNavigate('neighborhoods')}
-              className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
-                currentView === 'neighborhoods' 
-                  ? 'bg-primary/10 text-primary font-bold shadow-2xs' 
-                  : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container/60'
-              }`}
-            >
-              Delivery Zones
-            </button>
-            <button 
-              onClick={() => onNavigate('order-tracking')}
-              className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
-                currentView === 'order-tracking' 
-                  ? 'bg-primary/10 text-primary font-bold shadow-2xs' 
-                  : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container/60'
-              }`}
-            >
-              <Bike className="w-3.5 h-3.5 text-primary" />
-              <span>Track #LK-4092</span>
-            </button>
-            <button 
-              onClick={() => onNavigate('faqs-legal')}
-              className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
-                currentView === 'faqs-legal' 
-                  ? 'bg-primary/10 text-primary font-bold shadow-2xs' 
-                  : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container/60'
-              }`}
-              title="FAQs, Cost Transparency, Terms & NDPR Privacy"
-            >
-              <HelpCircle className="w-3.5 h-3.5 text-primary" />
-              <span>FAQs &amp; Transparency</span>
-            </button>
-            <button 
-              onClick={onOpenPortalModal}
-              className="px-3 py-1.5 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container/60 transition-all flex items-center gap-1 cursor-pointer"
-              title="Switch Portals (Customer, Vendor, Admin, Rider)"
-            >
-              <Layers className="w-3.5 h-3.5 text-secondary" />
-              <span>Portals</span>
-            </button>
-          </nav>
-
           {/* Quick View Portal Switcher Pill */}
           <div className="hidden sm:inline-flex items-center p-1 bg-surface-container-low rounded-2xl border border-outline-variant/30 text-xs shadow-2xs">
             <button
@@ -265,16 +172,6 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
           >
             <Bell className="w-5 h-5" />
             <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-primary ring-2 ring-surface animate-pulse"></span>
-          </button>
-
-          {/* Quick Storefront Link (Desktop only) */}
-          <button 
-            onClick={() => onNavigate('vendor-storefront')}
-            className="hidden lg:flex p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-2xl transition-colors cursor-pointer"
-            title="Mama Ngozi's Kitchen Storefront"
-            aria-label="Vendor Storefront"
-          >
-            <Store className="w-5 h-5" />
           </button>
 
           {/* Standout Primary Cart Trigger */}
