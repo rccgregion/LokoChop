@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { FoodItem, Restaurant, ActiveView } from '../types';
 import { RESTAURANTS_DATA, FOOD_ITEMS_DATA } from '../data/mockData';
 import { CustomerReviews } from '../components/CustomerReviews';
+import { DishesFilterBar, CategoryOption, TagOption, SortOption, BrowseTab } from '../components/DishesFilterBar';
 import { 
   Check, 
   Plus, 
@@ -11,6 +13,7 @@ import {
   MessageCircle, 
   Store, 
   Utensils, 
+  UtensilsCrossed,
   MapPin, 
   Flame, 
   ShieldCheck,
@@ -19,7 +22,12 @@ import {
   Heart,
   Clock,
   Copy,
-  Sparkles
+  Sparkles,
+  Soup,
+  Beef,
+  Sandwich,
+  Coffee,
+  RotateCcw
 } from 'lucide-react';
 
 interface MarketplaceViewProps {
@@ -41,6 +49,7 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedTag, setSelectedTag] = useState<string>('all');
   const [quickFilter, setQuickFilter] = useState<string>('none');
+  const [sortBy, setSortBy] = useState<SortOption>('featured');
   const [addedItemNotice, setAddedItemNotice] = useState<string | null>(null);
 
   const CATERING_WHATSAPP_PHONE = '2349074072454';
@@ -58,6 +67,65 @@ Please connect me with a suitable vendor. Thanks!`;
     setAddedItemNotice(item.name);
     setTimeout(() => setAddedItemNotice(null), 1800);
   };
+
+  // Dynamic category definition with accurate dish counts
+  const categoriesList = useMemo<CategoryOption[]>(() => {
+    const counts: Record<string, number> = {
+      all: FOOD_ITEMS_DATA.length,
+      rice: 0,
+      swallow: 0,
+      grill: 0,
+      pastries: 0,
+      drinks: 0,
+    };
+    FOOD_ITEMS_DATA.forEach(item => {
+      if (counts[item.category] !== undefined) {
+        counts[item.category]++;
+      }
+    });
+
+    return [
+      { id: 'all', label: 'All Dishes', count: counts.all, icon: UtensilsCrossed },
+      { id: 'rice', label: 'Rice & Combos', count: counts.rice, icon: Flame },
+      { id: 'swallow', label: 'Swallow & Soups', count: counts.swallow, icon: Soup },
+      { id: 'grill', label: 'Grilled & Suya', count: counts.grill, icon: Beef },
+      { id: 'pastries', label: 'Pastries & Shawarma', count: counts.pastries, icon: Sandwich },
+      { id: 'drinks', label: 'Chilled Drinks & Zobo', count: counts.drinks, icon: Coffee },
+    ];
+  }, []);
+
+  // Dynamic tags with priority for user-requested popular tags
+  const tagsList = useMemo<TagOption[]>(() => {
+    const tagCountMap: Record<string, number> = {};
+    FOOD_ITEMS_DATA.forEach(item => {
+      item.tags?.forEach(tag => {
+        tagCountMap[tag] = (tagCountMap[tag] || 0) + 1;
+      });
+    });
+
+    const orderedTags = [
+      '#FriedChicken',
+      '#Jollof',
+      '#Shawarma',
+      '#Burgers',
+      '#Cakes',
+      '#Amala',
+      '#Swallow',
+      '#LocalDelicacies',
+      '#Bakery',
+      '#FreshBread',
+      '#MeatPie',
+      '#FastFood',
+      '#Cafe',
+      '#Breakfast',
+      '#TravelersPack'
+    ];
+
+    return orderedTags.map(tagName => ({
+      name: tagName,
+      count: tagCountMap[tagName] || 0,
+    }));
+  }, []);
 
   // Filter food items with deep tag & cluster search
   const filteredFood = FOOD_ITEMS_DATA.filter(food => {
@@ -97,6 +165,34 @@ Please connect me with a suitable vendor. Thanks!`;
 
     return true;
   });
+
+  // Sort filtered food according to selected sort option
+  const sortedAndFilteredFood = useMemo(() => {
+    const list = [...filteredFood];
+    if (sortBy === 'price-low') {
+      list.sort((a, b) => a.price - b.price);
+    } else if (sortBy === 'price-high') {
+      list.sort((a, b) => b.price - a.price);
+    } else if (sortBy === 'rating') {
+      list.sort((a, b) => b.rating - a.rating);
+    } else if (sortBy === 'fastest') {
+      const getPrepMinutes = (prepStr: string) => {
+        const match = prepStr.match(/\d+/);
+        return match ? parseInt(match[0], 10) : 99;
+      };
+      list.sort((a, b) => getPrepMinutes(a.prepTime) - getPrepMinutes(b.prepTime));
+    }
+    return list;
+  }, [filteredFood, sortBy]);
+
+  const handleResetFilters = () => {
+    setSelectedCategory('all');
+    setSelectedTag('all');
+    setQuickFilter('none');
+    setSortBy('featured');
+  };
+
+  const hasActiveFilters = selectedCategory !== 'all' || selectedTag !== 'all' || quickFilter !== 'none' || sortBy !== 'featured';
 
   // Filter restaurants with tag & offerings search
   const filteredRestaurants = RESTAURANTS_DATA.filter(rest => {
@@ -200,37 +296,37 @@ Please connect me with a suitable vendor. Thanks!`;
       )}
 
       {/* Hero Banner: Asymmetric Bento Showcase */}
-      <section className="max-w-7xl mx-auto px-4 md:px-6 pt-2">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+      <section className="max-w-7xl mx-auto px-3.5 sm:px-4 md:px-6 pt-2">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-stretch">
           
           {/* Text & Value Proposition */}
-          <div className="lg:col-span-7 bg-surface-container p-6 sm:p-10 rounded-2xl border border-outline-variant/30 flex flex-col justify-between shadow-xs relative overflow-hidden">
-            <div className="relative z-10 space-y-3">
+          <div className="lg:col-span-7 bg-surface-container p-4 sm:p-7 md:p-10 rounded-2xl border border-outline-variant/30 flex flex-col justify-between shadow-xs relative overflow-hidden">
+            <div className="relative z-10 space-y-2.5 sm:space-y-3">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tertiary-container/30 border border-tertiary-container text-tertiary text-xs font-semibold">
                 <ShieldCheck className="w-3.5 h-3.5 text-tertiary" />
                 Verified Confluence Bukas &amp; Grills
               </div>
-              <h1 className="font-headline text-3xl sm:text-4xl lg:text-5xl text-on-surface font-bold tracking-tight leading-tight">
+              <h1 className="font-headline text-2xl sm:text-4xl lg:text-5xl text-on-surface font-bold tracking-tight leading-tight">
                 Confluence food, delivered hot &amp; ready across Lokoja.
               </h1>
-              <p className="text-on-surface-variant text-sm sm:text-base leading-relaxed">
+              <p className="text-on-surface-variant text-xs sm:text-base leading-relaxed">
                 Freshly pounded yam, sizzling Confluence river catfish, charcoal suya, and Mama&apos;s authentic firewood jollof. Straight from the pot to your doorstep in Lokongoma, Adankolo, GRA, and beyond.
               </p>
             </div>
 
             {/* Quick Action Counters */}
-            <div className="grid grid-cols-3 gap-3 pt-6 border-t border-outline-variant/30 relative z-10 mt-6">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-4 sm:pt-6 border-t border-outline-variant/30 relative z-10 mt-5 sm:mt-6">
               <div>
-                <span className="font-price-display text-2xl font-bold text-primary">14</span>
-                <p className="text-[11px] text-on-surface-variant">Verified Lokoja Bukas</p>
+                <span className="font-price-display text-xl sm:text-2xl font-bold text-primary">14</span>
+                <p className="text-[10px] sm:text-[11px] text-on-surface-variant leading-tight">Verified Lokoja Bukas</p>
               </div>
               <div>
-                <span className="font-price-display text-2xl font-bold text-tertiary">15 Min</span>
-                <p className="text-[11px] text-on-surface-variant">Avg. Core Dispatch</p>
+                <span className="font-price-display text-xl sm:text-2xl font-bold text-tertiary">15 Min</span>
+                <p className="text-[10px] sm:text-[11px] text-on-surface-variant leading-tight">Avg. Core Dispatch</p>
               </div>
               <div>
-                <span className="font-price-display text-2xl font-bold text-secondary">0%</span>
-                <p className="text-[11px] text-on-surface-variant">Hidden Food Surcharges</p>
+                <span className="font-price-display text-xl sm:text-2xl font-bold text-secondary">0%</span>
+                <p className="text-[10px] sm:text-[11px] text-on-surface-variant leading-tight">Hidden Food Surcharges</p>
               </div>
             </div>
 
@@ -238,7 +334,7 @@ Please connect me with a suitable vendor. Thanks!`;
           </div>
 
           {/* Hero Image Bento Block with Hotlinked Images */}
-          <div className="lg:col-span-5 grid grid-cols-2 gap-4">
+          <div className="lg:col-span-5 grid grid-cols-2 gap-3 sm:gap-4">
             
             {/* Bento 1: Smoky Party Jollof */}
             <div 
@@ -248,19 +344,19 @@ Please connect me with a suitable vendor. Thanks!`;
               <img 
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlIDLDMQNB5aexwNMNdLH_0VukMcrC6HxEbSTwnGHbH3MWM7lKG6ExqHoqUxsvgTTiN8KDR9Oorem4XZISW9G7J8B3xXmVyXv6qsoLiK7NYvNRujOP66tqTMR3BnnMuHy9LDtZm9U32VCJwwBTWuVIhhtkqoUmoB3Aab3OyFspZp1o0LeqsRavv9p4OsF-AIPzoPhPjxEyT2f094-4AFNiENZ6Mvi2cGwAM4H_eRvLMJEEJJSajmjO"
                 alt="Smoky Party Jollof"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 min-h-[200px]"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 min-h-[160px] sm:min-h-[200px]"
                 referrerPolicy="no-referrer"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent flex items-end p-4">
+              <div className="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent flex items-end p-3 sm:p-4">
                 <div>
-                  <span className="text-white font-headline text-base font-bold block">Smoky Party Jollof</span>
-                  <span className="text-secondary-fixed text-xs">Mama Ngozi&apos;s Kitchen</span>
+                  <span className="text-white font-headline text-sm sm:text-base font-bold block leading-tight">Smoky Party Jollof</span>
+                  <span className="text-secondary-fixed text-[11px] sm:text-xs">Mama Ngozi&apos;s Kitchen</span>
                 </div>
               </div>
             </div>
 
             {/* Bento Col 2 */}
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-3 sm:gap-4">
               
               {/* Point & Kill Catfish */}
               <div 
@@ -270,11 +366,11 @@ Please connect me with a suitable vendor. Thanks!`;
                 <img 
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuDb8MQ_ouBjbm6Rtk_LYWJdjoeY4Idg0CANrzfFRCcLYNDCC9ps3qJUltHSGF5w0fLSgzkVXaMFNVHv6v5BmFswHm8JOi6z36wtImYUl6nQjMypSpRdTAW4NVMHQg0BBFobENYeWDqyv7LdEy2khCycq2OWnm_dqG-xcXJWYnaC1UR3oqSOWzSEelGeKM7gvuzsXV7Kl0Ch5zPhH8f7Xw4-vWLO1ErU0CHCIjq2MTcOfxnLdsiv5vnj"
                   alt="Point & Kill Catfish"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 min-h-[75px]"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent flex items-end p-3">
-                  <span className="text-white text-xs font-bold font-headline">Point &amp; Kill Catfish</span>
+                <div className="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent flex items-end p-2.5 sm:p-3">
+                  <span className="text-white text-[11px] sm:text-xs font-bold font-headline">Point &amp; Kill Catfish</span>
                 </div>
               </div>
 
@@ -286,11 +382,11 @@ Please connect me with a suitable vendor. Thanks!`;
                 <img 
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKVnBYaUb7qc0uOqXGD_CYxvk3y7GEKtPdcIQH8k4IOCkHBYdzhHvzde6-nIOhqtNSb04vNWGdl2b3yNr-3UwA9yqmYL7uVK2VbQYeXlp1kHy1FStdTglSpEO17_D7GkKUwRxwiYZFPcG0aDxz2dZVVdVJlyr8oBV95bz6MQ7g7k9uKcbGmjssIrU8FRS4ElwIO1jZDYo1dzFwF04YrEQOfddbmYMTbanN6qGjaprStnckbh3G0HHN"
                   alt="Pounded Yam & Egusi"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 min-h-[75px]"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent flex items-end p-3">
-                  <span className="text-white text-xs font-bold font-headline">Pounded Yam &amp; Egusi</span>
+                <div className="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent flex items-end p-2.5 sm:p-3">
+                  <span className="text-white text-[11px] sm:text-xs font-bold font-headline">Pounded Yam &amp; Egusi</span>
                 </div>
               </div>
 
@@ -300,222 +396,111 @@ Please connect me with a suitable vendor. Thanks!`;
         </div>
       </section>
 
-      {/* 3 Primary Browse Tabs Bar */}
-      <section className="max-w-7xl mx-auto px-4 md:px-6" id="marketplace">
-        <div className="bg-surface-container-low p-2 rounded-2xl border border-outline-variant/30 flex flex-wrap items-center justify-between gap-3">
-          
-          {/* Main Switch Tabs */}
-          <div className="flex items-center gap-1 bg-surface-container-high p-1 rounded-xl text-xs sm:text-sm font-semibold">
-            <button
-              onClick={() => setBrowseTab('food')}
-              className={`px-4 sm:px-5 py-2.5 rounded-lg transition-all flex items-center gap-2 cursor-pointer ${
-                browseTab === 'food'
-                  ? 'bg-secondary text-on-secondary shadow-xs font-bold'
-                  : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest'
-              }`}
-            >
-              <Utensils className="w-4 h-4" />
-              <span>Browse by Food</span>
-            </button>
-
-            <button
-              onClick={() => setBrowseTab('restaurants')}
-              className={`px-4 sm:px-5 py-2.5 rounded-lg transition-all flex items-center gap-2 cursor-pointer ${
-                browseTab === 'restaurants'
-                  ? 'bg-secondary text-on-secondary shadow-xs font-bold'
-                  : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest'
-              }`}
-            >
-              <Store className="w-4 h-4" />
-              <span>Browse Restaurants (14)</span>
-            </button>
-
-            <button
-              onClick={() => setBrowseTab('neighborhoods')}
-              className={`px-4 sm:px-5 py-2.5 rounded-lg transition-all flex items-center gap-2 cursor-pointer ${
-                browseTab === 'neighborhoods'
-                  ? 'bg-secondary text-on-secondary shadow-xs font-bold'
-                  : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest'
-              }`}
-            >
-              <MapPin className="w-4 h-4" />
-              <span>Browse Neighborhoods</span>
-            </button>
-          </div>
-
-          {/* Quick Filter Sub-tags */}
-          <div className="flex items-center gap-1.5 overflow-x-auto custom-scroll py-1 text-xs">
-            <span className="text-on-surface-variant font-medium px-1">Quick:</span>
-
-            <button
-              onClick={() => setQuickFilter(quickFilter === 'favorites' ? 'none' : 'favorites')}
-              className={`px-3 py-1.5 rounded-full border transition-all cursor-pointer flex items-center gap-1.5 ${
-                quickFilter === 'favorites'
-                  ? 'bg-amber-400 text-stone-950 border-amber-400 font-extrabold shadow-xs'
-                  : 'bg-surface-container-lowest border-outline-variant/40 hover:border-amber-400 text-on-surface'
-              }`}
-            >
-              <Star className={`w-3.5 h-3.5 ${quickFilter === 'favorites' ? 'fill-stone-950 text-stone-950' : 'text-amber-500 fill-amber-500'}`} />
-              <span>Starred Favorites ({favoriteFoodIds.length})</span>
-            </button>
-
-            <button
-              onClick={() => setQuickFilter(quickFilter === 'under2500' ? 'none' : 'under2500')}
-              className={`px-3 py-1.5 rounded-full border transition-colors cursor-pointer ${
-                quickFilter === 'under2500'
-                  ? 'bg-primary text-white border-primary font-bold'
-                  : 'bg-surface-container-lowest border-outline-variant/40 hover:border-primary text-on-surface'
-              }`}
-            >
-              🔥 Under ₦2,500
-            </button>
-
-            <button
-              onClick={() => setQuickFilter(quickFilter === 'tier1' ? 'none' : 'tier1')}
-              className={`px-3 py-1.5 rounded-full border transition-colors cursor-pointer ${
-                quickFilter === 'tier1'
-                  ? 'bg-primary text-white border-primary font-bold'
-                  : 'bg-surface-container-lowest border-outline-variant/40 hover:border-primary text-on-surface'
-              }`}
-            >
-              ⚡ Tier 1 Fast (15m)
-            </button>
-
-            <button
-              onClick={() => setQuickFilter(quickFilter === 'catfish' ? 'none' : 'catfish')}
-              className={`px-3 py-1.5 rounded-full border transition-colors cursor-pointer ${
-                quickFilter === 'catfish'
-                  ? 'bg-primary text-white border-primary font-bold'
-                  : 'bg-surface-container-lowest border-outline-variant/40 hover:border-primary text-on-surface'
-              }`}
-            >
-              🐟 Fresh Catfish Today
-            </button>
-          </div>
-
-        </div>
+      {/* Unified Professional Marketplace Filter Command */}
+      <section className="max-w-7xl mx-auto px-3.5 sm:px-4 md:px-6" id="marketplace">
+        <DishesFilterBar
+          browseTab={browseTab}
+          onSelectBrowseTab={setBrowseTab}
+          restaurantCount={RESTAURANTS_DATA.length}
+          quickFilter={quickFilter}
+          onSelectQuickFilter={setQuickFilter}
+          favoritesCount={favoriteFoodIds.length}
+          categories={categoriesList}
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
+          tags={tagsList}
+          selectedTag={selectedTag}
+          onSelectTag={setSelectedTag}
+          totalResults={sortedAndFilteredFood.length}
+          sortBy={sortBy}
+          onSortChange={setSortBy}
+          onResetFilters={handleResetFilters}
+          hasActiveFilters={hasActiveFilters}
+        />
       </section>
 
-      {/* TAB CONTENT 1: BROWSE BY FOOD */}
-      {browseTab === 'food' && (
-        <section className="max-w-7xl mx-auto px-4 md:px-6 space-y-6">
-          
-          {/* Starred Favorites Quick Reorder Shelf (if any) */}
-          {favoriteFoodIds.length > 0 && quickFilter !== 'favorites' && (
-            <div className="bg-surface-container-low/70 border border-amber-500/20 rounded-2xl p-4 space-y-2.5">
-              <div className="flex items-center justify-between">
-                <span className="font-headline text-xs font-bold text-on-surface flex items-center gap-1.5">
-                  <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-                  <span>Your Starred Lokoja Dishes ({favoriteFoodIds.length})</span>
-                </span>
-                <button
-                  onClick={() => setQuickFilter('favorites')}
-                  className="text-xs text-primary font-semibold hover:underline cursor-pointer"
-                >
-                  View All Favorites &rarr;
-                </button>
-              </div>
-
-              <div className="flex items-center gap-3 overflow-x-auto pb-1 custom-scroll">
-                {FOOD_ITEMS_DATA.filter(f => favoriteFoodIds.includes(f.id)).map(fav => (
-                  <div 
-                    key={`fav-shelf-${fav.id}`}
-                    className="flex items-center gap-2.5 bg-surface-container-lowest p-2 rounded-xl border border-outline-variant/30 shrink-0 shadow-xs hover:border-primary/40 transition-colors"
+      {/* ANIMATED TAB CONTENTS */}
+      <AnimatePresence mode="wait">
+        {/* TAB CONTENT 1: BROWSE BY FOOD */}
+        {browseTab === 'food' && (
+          <motion.section
+            key="tab-browse-food"
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -14 }}
+            transition={{ duration: 0.28, ease: 'easeOut' }}
+            className="max-w-7xl mx-auto px-4 md:px-6 space-y-6"
+          >
+            
+            {/* Starred Favorites Quick Reorder Shelf (if any) */}
+            {favoriteFoodIds.length > 0 && quickFilter !== 'favorites' && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.25 }}
+                className="bg-surface-container-low/70 border border-amber-500/20 rounded-2xl p-4 space-y-2.5 overflow-hidden"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-headline text-xs font-bold text-on-surface flex items-center gap-1.5">
+                    <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+                    <span>Your Starred Lokoja Dishes ({favoriteFoodIds.length})</span>
+                  </span>
+                  <button
+                    onClick={() => setQuickFilter('favorites')}
+                    className="text-xs text-primary font-semibold hover:underline cursor-pointer"
                   >
-                    <img 
-                      src={fav.imageUrl} 
-                      alt={fav.name} 
-                      className="w-10 h-10 rounded-lg object-cover"
-                      referrerPolicy="no-referrer"
-                    />
-                    <div className="text-left pr-2">
-                      <div className="font-bold text-xs text-on-surface line-clamp-1 max-w-[130px]">{fav.name}</div>
-                      <div className="text-[10px] text-primary font-bold font-price-display">₦{fav.price.toLocaleString()}</div>
-                    </div>
-                    <button
-                      onClick={() => handleAdd(fav)}
-                      className="p-1.5 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors cursor-pointer"
-                      title="Add to cart"
+                    View All Favorites &rarr;
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-3 overflow-x-auto pb-1 custom-scroll">
+                  {FOOD_ITEMS_DATA.filter(f => favoriteFoodIds.includes(f.id)).map(fav => (
+                    <motion.div 
+                      key={`fav-shelf-${fav.id}`}
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="flex items-center gap-2.5 bg-surface-container-lowest p-2 rounded-xl border border-outline-variant/30 shrink-0 shadow-xs hover:border-primary/40 transition-colors"
                     >
-                      <Plus className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+                      <img 
+                        src={fav.imageUrl} 
+                        alt={fav.name} 
+                        className="w-10 h-10 rounded-lg object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                      <div className="text-left pr-2">
+                        <div className="font-bold text-xs text-on-surface line-clamp-1 max-w-[130px]">{fav.name}</div>
+                        <div className="text-[10px] text-primary font-bold font-price-display">₦{fav.price.toLocaleString()}</div>
+                      </div>
+                      <button
+                        onClick={() => handleAdd(fav)}
+                        className="p-1.5 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors cursor-pointer"
+                        title="Add to cart"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                      </button>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
 
-          {/* Subcategory Pills */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 custom-scroll text-xs">
-            {[
-              { id: 'all', label: 'All Dishes' },
-              { id: 'rice', label: 'Rice & Combos (9)' },
-              { id: 'swallow', label: 'Swallow & Soups (7)' },
-              { id: 'grill', label: 'Grilled & Suya (6)' },
-              { id: 'pastries', label: 'Pastries & Shawarma (4)' },
-              { id: 'drinks', label: 'Chilled Drinks & Zobo (5)' },
-            ].map(cat => (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`px-4 py-2 rounded-full font-semibold whitespace-nowrap transition-colors cursor-pointer ${
-                  selectedCategory === cat.id
-                    ? 'bg-secondary text-on-secondary shadow-xs font-bold'
-                    : 'bg-surface-container-lowest border border-outline-variant/30 text-on-surface hover:bg-surface-container-high'
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Lokoja Food & Vendor Tags Strip */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-2 custom-scroll text-xs">
-            <span className="text-on-surface-variant font-bold text-[11px] shrink-0 mr-1 flex items-center gap-1">
-              Popular Tags:
-            </span>
-            {[
-              'all',
-              '#FriedChicken',
-              '#Jollof',
-              '#Shawarma',
-              '#Burgers',
-              '#Cakes',
-              '#Amala',
-              '#Swallow',
-              '#LocalDelicacies',
-              '#Bakery',
-              '#FreshBread',
-              '#MeatPie',
-              '#FastFood',
-              '#Cafe',
-              '#Breakfast',
-              '#TravelersPack'
-            ].map(tag => (
-              <button
-                key={tag}
-                onClick={() => setSelectedTag(selectedTag === tag ? 'all' : tag)}
-                className={`px-3 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
-                  selectedTag === tag
-                    ? 'bg-primary text-white shadow-xs font-bold'
-                    : 'bg-surface-container-low text-on-surface-variant hover:text-primary hover:bg-surface-container border border-outline-variant/20'
-                }`}
-              >
-                {tag === 'all' ? 'All Tags' : tag}
-              </button>
-            ))}
-          </div>
-
-          {/* Food Menu Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredFood.map(food => {
-              const isStarred = favoriteFoodIds.includes(food.id);
-              return (
-                <article
-                  key={food.id}
-                  className="bg-surface-container-lowest rounded-xl border border-outline-variant/30 overflow-hidden flex flex-col justify-between hover:border-primary-container/60 transition-all group shadow-xs"
-                >
-                  <div className="relative h-48 overflow-hidden bg-surface-container">
+            {/* Food Menu Grid */}
+            <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {sortedAndFilteredFood.map(food => {
+                const isStarred = favoriteFoodIds.includes(food.id);
+                return (
+                  <motion.article
+                    layout
+                    initial={{ opacity: 0, scale: 0.96 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.96 }}
+                    transition={{ duration: 0.22 }}
+                    whileHover={{ y: -3, transition: { duration: 0.15 } }}
+                    key={food.id}
+                    className="bg-surface-container-lowest rounded-xl border border-outline-variant/30 overflow-hidden flex flex-col justify-between hover:border-primary-container/60 transition-all group shadow-xs hover:shadow-md"
+                  >
+                    <div className="relative h-48 overflow-hidden bg-surface-container">
                     <img 
                       src={food.imageUrl} 
                       alt={food.name}
@@ -609,29 +594,43 @@ Please connect me with a suitable vendor. Thanks!`;
                       </button>
                     </div>
                   </div>
-                </article>
+                </motion.article>
               );
             })}
-          </div>
+          </motion.div>
 
-          {filteredFood.length === 0 && (
-            <div className="text-center py-12 text-on-surface-variant bg-surface-container-low rounded-xl p-8 border border-outline-variant/30">
-              <p className="text-sm font-semibold">No dishes match your active filter.</p>
+          {sortedAndFilteredFood.length === 0 && (
+            <div className="text-center py-12 text-on-surface-variant bg-surface-container-low rounded-2xl p-8 border border-outline-variant/30 space-y-3">
+              <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto">
+                <UtensilsCrossed className="w-6 h-6" />
+              </div>
+              <h3 className="font-headline font-bold text-base text-on-surface">No dishes match your active filter</h3>
+              <p className="text-xs text-on-surface-variant max-w-sm mx-auto">
+                Try switching categories, choosing a different tag, or resetting your filter criteria to see all available Confluence dishes.
+              </p>
               <button 
-                onClick={() => { setSelectedCategory('all'); setQuickFilter('none'); }}
-                className="mt-3 px-4 py-2 rounded-lg bg-secondary text-white text-xs font-semibold cursor-pointer"
+                onClick={handleResetFilters}
+                className="mt-2 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primary/90 shadow-xs transition-colors cursor-pointer"
               >
-                Reset Filters
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Reset All Filters</span>
               </button>
             </div>
           )}
 
-        </section>
+        </motion.section>
       )}
 
       {/* TAB CONTENT 2: BROWSE RESTAURANTS (14 Verified) */}
       {browseTab === 'restaurants' && (
-        <section className="max-w-7xl mx-auto px-4 md:px-6 space-y-6">
+        <motion.section 
+          key="tab-browse-restaurants"
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -14 }}
+          transition={{ duration: 0.28, ease: 'easeOut' }}
+          className="max-w-7xl mx-auto px-4 md:px-6 space-y-6"
+        >
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
             <div>
               <h2 className="font-headline text-2xl font-bold text-on-surface">Verified Lokoja Restaurants &amp; Bukas (14)</h2>
@@ -644,8 +643,9 @@ Please connect me with a suitable vendor. Thanks!`;
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredRestaurants.map(rest => (
-              <div 
+              <motion.div 
                 key={rest.id}
+                whileHover={{ y: -3, transition: { duration: 0.15 } }}
                 className="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 p-5 flex flex-col justify-between hover:shadow-md transition-shadow"
               >
                 <div>
@@ -738,15 +738,22 @@ Please connect me with a suitable vendor. Thanks!`;
                     Order Food
                   </button>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </section>
+        </motion.section>
       )}
 
       {/* TAB CONTENT 3: BROWSE BY NEIGHBORHOOD */}
       {browseTab === 'neighborhoods' && (
-        <section className="max-w-7xl mx-auto px-4 md:px-6 space-y-6">
+        <motion.section 
+          key="tab-browse-neighborhoods"
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -14 }}
+          transition={{ duration: 0.28, ease: 'easeOut' }}
+          className="max-w-7xl mx-auto px-4 md:px-6 space-y-6"
+        >
           <div className="flex items-center justify-between">
             <div>
               <h2 className="font-headline text-2xl font-bold text-on-surface">Explore Lokoja Delivery Neighborhoods</h2>
@@ -840,8 +847,9 @@ Please connect me with a suitable vendor. Thanks!`;
               </button>
             </div>
           </div>
-        </section>
+        </motion.section>
       )}
+      </AnimatePresence>
 
       {/* Customer Reviews & Community Feedback Section */}
       <section className="max-w-7xl mx-auto px-4 md:px-6 py-4">

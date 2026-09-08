@@ -1,5 +1,6 @@
 import React from 'react';
 import { ActiveView } from '../types';
+import { AppLogo } from './AppLogo';
 import { Waves, Phone, ShieldCheck, Bike, FileText } from 'lucide-react';
 
 interface FooterProps {
@@ -14,10 +15,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenTermsModal }) 
         
         {/* Left: Brand Logo & Copyright */}
         <div className="flex flex-col items-center md:items-start text-center md:text-left">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-7 h-7 rounded bg-primary-container flex items-center justify-center text-on-primary">
-              <Waves className="w-4 h-4 text-amber-300" />
-            </div>
+          <div className="flex items-center gap-2.5 mb-2">
+            <AppLogo size="sm" />
             <span className="font-headline text-lg font-bold text-inverse-on-surface">LokoChop</span>
             <span className="text-outline">|</span>
             <span className="text-inverse-on-surface/80">Confluence food, delivered hot &amp; ready across Lokoja</span>

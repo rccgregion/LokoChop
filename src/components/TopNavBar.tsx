@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ActiveView, VendorUser, AdminUser } from '../types';
+import { AppLogo } from './AppLogo';
 import { 
   Waves, 
   Search, 
@@ -43,21 +44,19 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
       <div className="w-full px-3.5 sm:px-5 md:px-6 max-w-7xl mx-auto flex items-center justify-between h-16 sm:h-[4.25rem]">
         
         {/* Brand & Confluence Motif */}
-        <div className="flex items-center gap-3 sm:gap-4 lg:gap-5">
+        <div className="flex items-center gap-2 sm:gap-4 lg:gap-5 shrink-0 min-w-0">
           <button 
             onClick={() => onNavigate('marketplace')} 
-            className="flex items-center gap-2.5 group text-left focus:outline-none cursor-pointer"
+            className="flex items-center gap-2.5 sm:gap-3 group text-left focus:outline-none cursor-pointer"
             title="LokoChop — Confluence Food Marketplace"
           >
             {/* Visual Logo Mark */}
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
-              <Waves className="w-5 h-5 text-amber-300" />
-            </div>
+            <AppLogo size="md" className="shrink-0" />
 
             {/* Brand Titles */}
-            <div className="flex flex-col">
-              <div className="flex items-center gap-1.5">
-                <span className="font-headline text-xl sm:text-2xl font-black tracking-tight text-on-surface group-hover:text-primary transition-colors">
+            <div className="flex flex-col min-w-0">
+              <div className="flex items-center gap-1 sm:gap-1.5">
+                <span className="font-headline text-lg sm:text-2xl font-black tracking-tight text-on-surface group-hover:text-primary transition-colors whitespace-nowrap">
                   Loko<span className="text-primary">Chop</span>
                 </span>
                 {currentView === 'admin-portal' && (
@@ -68,11 +67,11 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
                 {currentView === 'vendor-hub' && (
                   <span className="bg-tertiary/10 text-tertiary border border-tertiary/20 text-[9px] sm:text-[10px] font-bold tracking-wider px-1.5 py-0.5 rounded-full uppercase flex items-center gap-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    Vendor Hub
+                    <span className="hidden sm:inline">Vendor</span> Hub
                   </span>
                 )}
               </div>
-              <span className="text-[10px] sm:text-[11px] font-medium text-on-surface-variant/80 -mt-0.5 hidden xs:block">
+              <span className="text-[10px] sm:text-[11px] font-medium text-on-surface-variant/80 -mt-0.5 hidden xs:block truncate">
                 Confluence Food • Lokoja
               </span>
             </div>
@@ -177,7 +176,7 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
           {/* Standout Primary Cart Trigger */}
           <button 
             onClick={onOpenCart}
-            className="flex items-center gap-2 sm:gap-2.5 bg-primary hover:bg-primary-container text-white px-3 sm:px-4 py-2 rounded-2xl shadow-xs hover:shadow-sm active:scale-95 transition-all cursor-pointer"
+            className="flex items-center gap-1.5 sm:gap-2.5 bg-primary hover:bg-primary-container text-white px-2.5 sm:px-4 py-2 rounded-xl sm:rounded-2xl shadow-xs hover:shadow-sm active:scale-95 transition-all cursor-pointer shrink-0"
             aria-label="Open food cart"
           >
             <div className="relative">
@@ -192,7 +191,7 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
               <span className="text-xs sm:text-sm font-bold font-headline tracking-tight">
                 Cart
               </span>
-              <span className="text-[11px] sm:text-xs font-semibold text-white/90 font-price-display">
+              <span className="text-[11px] sm:text-xs font-semibold text-white/90 font-price-display hidden xs:inline">
                 • ₦{cartTotal.toLocaleString()}
               </span>
             </div>

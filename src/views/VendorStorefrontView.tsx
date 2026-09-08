@@ -200,9 +200,9 @@ export const VendorStorefrontView: React.FC<VendorStorefrontViewProps> = ({
       )}
 
       {/* Hero Vendor Banner with Hotlinked Background */}
-      <section className="max-w-7xl mx-auto px-4 md:px-6">
+      <section className="max-w-7xl mx-auto px-3.5 sm:px-4 md:px-6">
         <div 
-          className="relative rounded-2xl overflow-hidden shadow-xs border border-outline-variant/20 bg-cover bg-center min-h-[340px] md:min-h-[400px] flex flex-col justify-end p-4 md:p-6"
+          className="relative rounded-2xl overflow-hidden shadow-xs border border-outline-variant/20 bg-cover bg-center min-h-[300px] sm:min-h-[340px] md:min-h-[400px] flex flex-col justify-end p-3 sm:p-4 md:p-6"
           style={{
             backgroundImage: `url('${heroBannerUrl}')`
           }}
@@ -210,11 +210,11 @@ export const VendorStorefrontView: React.FC<VendorStorefrontViewProps> = ({
           <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/50 to-transparent"></div>
 
           {/* Floating Garri Cream Frosted Overlay Card */}
-          <div className="relative z-10 bg-surface-container-low/95 backdrop-blur-md rounded-xl p-4 md:p-6 border border-surface-container-lowest/80 shadow-md">
-            <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+          <div className="relative z-10 bg-surface-container-low/95 backdrop-blur-md rounded-xl p-3.5 sm:p-4 md:p-6 border border-surface-container-lowest/80 shadow-md">
+            <div className="flex flex-col md:flex-row md:items-start justify-between gap-3.5 sm:gap-4">
               
               <div className="space-y-2 max-w-2xl">
-                <div className="flex flex-wrap items-center gap-2 text-xs">
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs">
                   <span className="bg-primary text-on-primary px-2.5 py-0.5 rounded-full flex items-center gap-1 font-bold">
                     <ShieldCheck className="w-3.5 h-3.5" />
                     Verified Confluence Kitchen
@@ -228,11 +228,11 @@ export const VendorStorefrontView: React.FC<VendorStorefrontViewProps> = ({
                   </span>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-base shrink-0 shadow-xs">
+                <div className="flex items-center gap-2.5 sm:gap-3">
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-base shrink-0 shadow-xs">
                     {vendorShortCode}
                   </div>
-                  <h1 className="font-headline text-2xl sm:text-3xl lg:text-4xl font-extrabold text-on-surface tracking-tight">
+                  <h1 className="font-headline text-xl sm:text-3xl lg:text-4xl font-extrabold text-on-surface tracking-tight">
                     {vendorName}
                   </h1>
                 </div>
@@ -256,7 +256,7 @@ export const VendorStorefrontView: React.FC<VendorStorefrontViewProps> = ({
               </div>
 
               {/* Quick Info Pill Badge Box */}
-              <div className="flex flex-col items-start gap-1.5 bg-surface-container-high/60 p-3 rounded-lg border border-outline-variant/20 shrink-0 text-xs min-w-[240px]">
+              <div className="flex flex-col items-start gap-1.5 bg-surface-container-high/60 p-3 rounded-lg border border-outline-variant/20 shrink-0 text-xs w-full md:w-auto md:min-w-[240px]">
                 <div className="flex items-center gap-1.5 text-tertiary font-bold">
                   <span className="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
                   <span>Open Now (Ready Pots by 10:00 AM)</span>
@@ -283,7 +283,7 @@ export const VendorStorefrontView: React.FC<VendorStorefrontViewProps> = ({
             </div>
 
             {/* Hot Notice Banner */}
-            <div className="mt-4 pt-3 border-t border-outline-variant/30 flex items-center gap-2 text-xs text-primary font-medium">
+            <div className="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-outline-variant/30 flex items-center gap-2 text-xs text-primary font-medium">
               <Flame className="w-4 h-4 text-primary shrink-0" />
               <span><strong>Hot Ready-Pots Policy:</strong> Dishes are prepared hot for fast dispatch without cooking delays. WhatsApp stock refreshed every 2 hours!</span>
             </div>
@@ -292,7 +292,7 @@ export const VendorStorefrontView: React.FC<VendorStorefrontViewProps> = ({
       </section>
 
       {/* Category Navigation Tabs */}
-      <section className="max-w-7xl mx-auto px-4 md:px-6">
+      <section className="max-w-7xl mx-auto px-3.5 sm:px-4 md:px-6">
         <div className="flex items-center gap-2 overflow-x-auto custom-scroll py-2 text-xs">
           <button
             onClick={() => setActiveCategory('all')}
@@ -423,6 +423,24 @@ export const VendorStorefrontView: React.FC<VendorStorefrontViewProps> = ({
               </p>
             </div>
 
+            {/* Mobile Bulk Order / Events Inquiry Card */}
+            <div className="lg:hidden bg-amber-500/10 p-4 rounded-xl border border-amber-500/30 space-y-2 text-xs">
+              <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300 font-bold">
+                <Users className="w-4 h-4 text-amber-600 shrink-0" />
+                <span>Planning a Lokoja Event with {vendorName}?</span>
+              </div>
+              <p className="text-on-surface-variant text-[11px] leading-relaxed">
+                Need party packs, catering trays, or executive lunch boxes for meetings, ceremonies, or gatherings?
+              </p>
+              <button
+                onClick={() => setIsCateringOpen(true)}
+                className="w-full py-2 px-3 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer"
+              >
+                <UtensilsCrossed className="w-3.5 h-3.5" />
+                <span>Request Bulk Catering Quote</span>
+              </button>
+            </div>
+
             {/* Customer Reviews & Storefront Ratings */}
             <div className="pt-2">
               <CustomerReviews 
@@ -433,8 +451,8 @@ export const VendorStorefrontView: React.FC<VendorStorefrontViewProps> = ({
 
           </div>
 
-          {/* Right Sticky Side Cart Drawer */}
-          <aside className="lg:col-span-4 sticky top-24 space-y-4">
+          {/* Right Sticky Side Cart Drawer (Desktop & Large Tablets) */}
+          <aside className="hidden lg:block lg:col-span-4 sticky top-24 space-y-4">
             <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-md p-5 text-on-surface">
               
               {/* Drawer Header */}
@@ -559,6 +577,35 @@ export const VendorStorefrontView: React.FC<VendorStorefrontViewProps> = ({
 
         </div>
       </section>
+
+      {/* Mobile Floating Sticky Quick-Cart Trigger (Fixed above MobileBottomNav) */}
+      {cartItems.length > 0 && (
+        <div className="fixed bottom-[calc(env(safe-area-inset-bottom,0px)+4.25rem)] left-3.5 right-3.5 z-30 lg:hidden animate-fade-in">
+          <button
+            onClick={onOpenCart}
+            className="w-full bg-primary hover:bg-primary-container text-white px-4 py-3 rounded-2xl shadow-xl flex items-center justify-between font-headline font-bold text-sm active:scale-98 transition-all cursor-pointer border border-white/20 backdrop-blur-md"
+            aria-label="View Chop Cart and Checkout"
+          >
+            <div className="flex items-center gap-2.5">
+              <div className="relative w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center">
+                <ShoppingBag className="w-4 h-4 text-white" />
+                <span className="absolute -top-1 -right-1 bg-amber-400 text-stone-950 font-black text-[9px] w-3.5 h-3.5 rounded-full flex items-center justify-center">
+                  {cartItems.reduce((acc, it) => acc + it.quantity, 0)}
+                </span>
+              </div>
+              <div className="text-left leading-tight">
+                <div className="text-[10px] text-amber-200 uppercase tracking-wider font-bold">Chop Cart</div>
+                <div className="text-sm font-black">View &amp; Checkout</div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5 font-price-display text-base font-black">
+              <span>₦{totalAmount.toLocaleString()}</span>
+              <ChevronRight className="w-4 h-4 text-amber-300" />
+            </div>
+          </button>
+        </div>
+      )}
 
       {/* Catering Inquiry Modal */}
       <CateringInquiryModal 

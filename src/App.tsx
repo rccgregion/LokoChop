@@ -227,7 +227,7 @@ export default function App() {
   };
 
   return (
-    <div id="lokoja-app-root" className="min-h-screen bg-surface text-on-surface flex flex-col font-body antialiased pb-16 md:pb-0">
+    <div id="lokoja-app-root" className="min-h-screen bg-surface text-on-surface flex flex-col font-body antialiased pb-[calc(env(safe-area-inset-bottom,0px)+4.5rem)] md:pb-0">
       
       {/* Top Header Navigation */}
       <TopNavBar
@@ -372,6 +372,7 @@ export default function App() {
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
         items={cartItems}
+        onAddToCart={handleAddToCart}
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveItem={handleRemoveItem}
         onEmptyCart={handleEmptyCart}

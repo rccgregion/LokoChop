@@ -128,7 +128,7 @@ export const OrderTrackingView: React.FC<OrderTrackingViewProps> = ({ onNavigate
   const supportWhatsAppUrl = buildSupportWhatsAppUrl(currentOrder);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8 space-y-6 pb-16">
+    <div className="max-w-7xl mx-auto px-3.5 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 space-y-4 sm:space-y-6 pb-16">
       
       {/* Breadcrumb Bar */}
       <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-on-surface-variant text-xs mb-2">
@@ -140,11 +140,11 @@ export const OrderTrackingView: React.FC<OrderTrackingViewProps> = ({ onNavigate
           My Account
         </button>
         <ChevronRight className="w-3.5 h-3.5 text-outline" />
-        <span className="text-primary font-bold">Order #{currentOrder.id} Tracking</span>
+        <span className="text-primary font-bold truncate">Order #{currentOrder.id}</span>
       </nav>
 
       {/* Top Alert Notification Bar */}
-      <div className="w-full bg-surface-container-high border border-outline-variant/40 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-on-surface text-xs shadow-xs">
+      <div className="w-full bg-surface-container-high border border-outline-variant/40 rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-on-surface text-xs shadow-xs">
         <div className="flex items-center gap-2.5">
           {isPaymentConfirmedByVendor ? (
             <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
@@ -517,20 +517,20 @@ export const OrderTrackingView: React.FC<OrderTrackingViewProps> = ({ onNavigate
         <div className="lg:col-span-5 space-y-6">
           
           {/* Preparation & Delivery Countdown Card */}
-          <div className="bg-surface-container rounded-3xl border-2 border-primary-container p-6 relative shadow-xs overflow-hidden">
+          <div className="bg-surface-container rounded-3xl border-2 border-primary-container p-4 sm:p-6 relative shadow-xs overflow-hidden">
             <div className="flex items-center gap-2 mb-3">
-              <Timer className="w-6 h-6 text-primary animate-pulse" />
-              <span className="text-xs font-bold text-primary uppercase tracking-wider">
+              <Timer className="w-5 h-5 sm:w-6 sm:h-6 text-primary animate-pulse" />
+              <span className="text-[11px] sm:text-xs font-bold text-primary uppercase tracking-wider">
                 {isPaymentConfirmedByVendor ? 'Estimated Delivery Countdown' : 'Awaiting Vendor Credit Confirmation'}
               </span>
             </div>
 
             {/* Digital Countdown Display */}
-            <div className="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 text-center space-y-1 shadow-inner">
-              <div className="font-price-display text-4xl md:text-5xl font-bold text-primary tracking-tight">
+            <div className="bg-surface-container-lowest rounded-2xl p-3.5 sm:p-5 border border-outline-variant/30 text-center space-y-1 shadow-inner">
+              <div className="font-price-display text-3xl sm:text-4xl md:text-5xl font-bold text-primary tracking-tight">
                 {formattedCountdown}
               </div>
-              <p className="text-xs text-on-surface-variant font-semibold">
+              <p className="text-[11px] sm:text-xs text-on-surface-variant font-semibold">
                 {isPaymentConfirmedByVendor
                   ? `Vendor Set Prep & Delivery Window (${currentOrder.prepEtaMins} mins)`
                   : 'Reconciliation Window (Direct Bank Verification)'}

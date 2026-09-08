@@ -504,7 +504,7 @@ export const VendorHubView: React.FC<VendorHubViewProps> = ({
   const netSettled = grossSales - platformFee;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8 space-y-8 pb-16">
+    <div className="max-w-7xl mx-auto px-3.5 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 space-y-6 sm:space-y-8 pb-16">
       
       {/* Toast Notification */}
       {notification && (
@@ -516,7 +516,7 @@ export const VendorHubView: React.FC<VendorHubViewProps> = ({
 
       {/* Super Admin Supervision Mode Banner */}
       {isAdminSupervising && (
-        <div className="bg-amber-400 text-stone-950 px-5 py-3.5 rounded-2xl border-2 border-amber-500 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-fade-in">
+        <div className="bg-amber-400 text-stone-950 px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl border-2 border-amber-500 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-fade-in">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-stone-900 text-amber-400 flex items-center justify-center font-bold shrink-0 shadow-xs">
               <ShieldCheck className="w-5 h-5" />
@@ -543,7 +543,7 @@ export const VendorHubView: React.FC<VendorHubViewProps> = ({
       )}
 
       {/* Top Banner: Vendor Header & Primary Actions */}
-      <div className="bg-surface-container-lowest rounded-3xl border border-outline-variant/30 p-6 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div className="bg-surface-container-lowest rounded-3xl border border-outline-variant/30 p-4 sm:p-6 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-4 sm:gap-6">
         
         {/* Left: Brand Identity & Status */}
         <div className="flex items-start gap-4">
@@ -686,7 +686,7 @@ export const VendorHubView: React.FC<VendorHubViewProps> = ({
       </div>
 
       {/* Financial Settlement & Remittance Metrics */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         
         {/* Metric 1: Customer Direct Payments Received */}
         <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 p-4 space-y-1.5 shadow-xs">
@@ -879,6 +879,13 @@ export const VendorHubView: React.FC<VendorHubViewProps> = ({
             badgeColor: activeHubTab === 'analytics' ? 'bg-white/20 text-white' : 'bg-emerald-600 text-white'
           },
           { id: 'menu', label: 'Menu, Prices & Stock', icon: UtensilsCrossed, badge: `${profile.menuItems?.length || 0}` },
+          { 
+            id: 'addons', 
+            label: '1-Click Add-Ons & Pricing', 
+            icon: Sparkles, 
+            badge: `${vendorAddOns.filter(a => a.available).length} Active`,
+            badgeColor: activeHubTab === 'addons' ? 'bg-white/20 text-white' : 'bg-amber-600 text-white'
+          },
           { 
             id: 'remittances', 
             label: 'App Share Remittance & Ledger', 
@@ -1341,6 +1348,19 @@ export const VendorHubView: React.FC<VendorHubViewProps> = ({
           </div>
         )}
       </section>
+      )}
+
+      {/* Tab Content: 1-Click Upsell Add-Ons & Pricing Control */}
+      {activeHubTab === 'addons' && (
+        <VendorAddOnsManager
+          vendorId={profile.vendorId}
+          vendorName={profile.vendorName}
+          addOns={vendorAddOns}
+          onToggleAvailability={handleToggleAddOnAvailability}
+          onUpdatePrice={handleUpdateAddOnPrice}
+          onAddCustomAddOn={handleAddCustomAddOn}
+          onDeleteCustomAddOn={handleDeleteCustomAddOn}
+        />
       )}
 
       {/* Tab Content: App Share Remittances & Financial Ledger */}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Download, X, Smartphone, Check } from 'lucide-react';
+import { AppLogo } from './AppLogo';
 
 export const PwaInstallBanner: React.FC = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
@@ -68,9 +69,7 @@ export const PwaInstallBanner: React.FC = () => {
     <>
       <div className="bg-primary text-on-primary px-4 py-2.5 shadow-md flex items-center justify-between text-xs sticky top-0 z-40 animate-fade-in border-b border-primary-container/40">
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-7 h-7 rounded-lg bg-white/15 flex items-center justify-center shrink-0">
-            <Smartphone className="w-4 h-4 text-white" />
-          </div>
+          <AppLogo size="sm" />
           <div className="truncate">
             <p className="font-bold font-headline truncate">
               Install LokoChop App

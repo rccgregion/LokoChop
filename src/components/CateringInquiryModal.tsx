@@ -119,8 +119,8 @@ export const CateringInquiryModal: React.FC<CateringInquiryModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-surface-container-lowest rounded-3xl border border-outline-variant/30 shadow-2xl max-w-xl w-full p-6 space-y-5 animate-fade-in text-on-surface max-h-[92vh] overflow-y-auto custom-scroll">
+    <div className="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+      <div className="bg-surface-container-lowest rounded-3xl border border-outline-variant/30 shadow-2xl max-w-xl w-full p-4 sm:p-6 space-y-4 sm:space-y-5 animate-fade-in text-on-surface max-h-[92vh] overflow-y-auto custom-scroll">
         
         {/* Header */}
         <div className="flex items-center justify-between pb-3 border-b border-outline-variant/20">

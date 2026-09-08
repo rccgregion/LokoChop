@@ -95,7 +95,7 @@ export const OrderHistoryView: React.FC<OrderHistoryViewProps> = ({ onNavigate, 
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8 space-y-6 pb-16">
+    <div className="max-w-7xl mx-auto px-3.5 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 space-y-4 sm:space-y-6 pb-16">
       
       {/* Breadcrumbs */}
       <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-on-surface-variant text-xs mb-2">
@@ -107,7 +107,7 @@ export const OrderHistoryView: React.FC<OrderHistoryViewProps> = ({ onNavigate, 
       </nav>
 
       {/* Customer Profile Header */}
-      <div className="bg-surface-container rounded-2xl border border-outline-variant/30 p-5 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-surface-container rounded-2xl border border-outline-variant/30 p-4 sm:p-5 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 rounded-full bg-primary-container text-on-primary font-headline font-bold text-xl flex items-center justify-center">
             AU

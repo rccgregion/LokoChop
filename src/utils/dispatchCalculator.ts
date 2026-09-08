@@ -5,178 +5,308 @@ import { CartItem } from '../types';
 export interface LokojaLocationZone {
   id: string;
   name: string;
-  tier: 'Tier 1' | 'Tier 2' | 'Tier 3';
-  tierLabel: string;
+  coordinates: { x: number; y: number };
+  baseTariff: number;
   description: string;
   landmarks: string[];
-  baseTariff: number;
+  tier?: 'Tier 1' | 'Tier 2' | 'Tier 3';
+  tierLabel?: string;
 }
 
-// Complete Master Registry of Lokoja Neighborhood Zones
+// Complete Master Registry of 25 Lokoja Delivery Neighborhoods
 export const LOKOJA_LOCATIONS: LokojaLocationZone[] = [
-  // 🟢 Tier 1: Core Urban Delivery Zones (Fast turnaround, dense courier presence)
-  {
-    id: 'lokongoma',
-    name: 'Lokongoma Phase 1 & 2',
-    tier: 'Tier 1',
-    tierLabel: 'Tier 1 Core',
-    description: 'Prime residential enclave, IBB Way, Somep Plaza, Kefas Hall axis',
-    landmarks: ['Phase 1 Police Post', 'Phase 2 Avenue', 'Somep Plaza', 'Kefas Hall', 'Candef Energies'],
-    baseTariff: 800,
-  },
-  {
-    id: 'paparanda',
-    name: 'Paparanda Square & Apata',
-    tier: 'Tier 1',
-    tierLabel: 'Tier 1 Core',
-    description: 'Central Commercial District, Apata Roundabout, Central Market, High Street',
-    landmarks: ['Paparanda Square', 'Apata Roundabout', 'Old Market Road', 'Crowther Memorial Area'],
-    baseTariff: 800,
-  },
-  {
-    id: 'gra',
-    name: 'GRA & Hospital Road',
-    tier: 'Tier 1',
-    tierLabel: 'Tier 1 Core',
-    description: 'Government Reserved Area, Federal Medical Centre (FMC), Aliu Attah Road',
-    landmarks: ['FMC Lokoja Gate', 'Misturah Plaza', 'Township Stadium Axis', 'Aliu Attah Road'],
-    baseTariff: 800,
-  },
   {
     id: 'adankolo',
-    name: 'Adankolo Road & Market',
-    tier: 'Tier 1',
-    tierLabel: 'Tier 1 Core',
+    name: 'Adankolo',
+    coordinates: { x: 1.2, y: -1.5 },
+    baseTariff: 800,
     description: 'Riverside food hub, Adankolo Market, Moremi House, NTI Junction',
     landmarks: ['Moremi House', 'Adankolo Market Junction', 'River Basin Authority', 'NTI Axis'],
-    baseTariff: 800,
+    tier: 'Tier 1',
+    tierLabel: 'Adankolo',
   },
   {
-    id: 'ganaja-junction',
-    name: 'Ganaja Junction & Flyover',
+    id: 'apata',
+    name: 'Apata',
+    coordinates: { x: -0.5, y: 0.5 },
+    baseTariff: 800,
+    description: 'Central commercial district, Apata Roundabout, Central Mosque corridor',
+    landmarks: ['Apata Roundabout', 'Old Market Road', 'Crowther Memorial Area'],
     tier: 'Tier 1',
-    tierLabel: 'Tier 1 Core',
-    description: 'Eastern interchange corridor, Rianzo Plaza, Destiny Plaza, AP Filling Station',
+    tierLabel: 'Apata',
+  },
+  {
+    id: 'banda',
+    name: 'Banda',
+    coordinates: { x: -3.5, y: 11.0 },
+    baseTariff: 2200,
+    description: 'Northern highway gateway, Abuja-Lokoja expressway outpost',
+    landmarks: ['Banda Community Gate', 'A2 Highway Corridor'],
+    tier: 'Tier 3',
+    tierLabel: 'Banda',
+  },
+  {
+    id: 'barracks-area',
+    name: 'Barracks Area (Army & Police)',
+    coordinates: { x: 2.2, y: 1.5 },
+    baseTariff: 1000,
+    description: 'Cantonment barracks corridor, Army Day, Police Headquarters axis',
+    landmarks: ['Cantonment Gate', 'Police Barracks', 'Army Day Secondary School Axis'],
+    tier: 'Tier 2',
+    tierLabel: 'Barracks Area',
+  },
+  {
+    id: 'felele',
+    name: 'Felele',
+    coordinates: { x: -2.2, y: 6.8 },
+    baseTariff: 1800,
+    description: 'Federal Polytechnic campus axis, Felele Express, student hostels corridor',
+    landmarks: ['Federal Poly Main Gate', 'Felele Express Junction', 'Student Hostels Axis'],
+    tier: 'Tier 3',
+    tierLabel: 'Felele',
+  },
+  {
+    id: 'ganaja-junction-axis',
+    name: 'Ganaja Junction Axis',
+    coordinates: { x: 4.2, y: -4.0 },
+    baseTariff: 800,
+    description: 'Eastern transit interchange corridor, Rianzo Plaza, Destiny Plaza, AP Station',
     landmarks: ['Ganaja Flyover', 'Rianzo Plaza', 'Destiny Garden Plaza', 'Ganaja Junction Roundabout'],
-    baseTariff: 800,
-  },
-  {
-    id: 'ankpa-road',
-    name: 'Ankpa Road Corridor',
     tier: 'Tier 1',
-    tierLabel: 'Tier 1 Core',
-    description: 'Commercial spine leading toward eastern highway exit and banking strip',
-    landmarks: ['Treasures Ankpa Rd', 'Zenith Bank Branch', 'State Library Road'],
-    baseTariff: 800,
-  },
-
-  // 🟡 Tier 2: Mid-Range Zones (Cross-Meme River, State Secretariat, Cantonment)
-  {
-    id: 'zone-8',
-    name: 'Sarkin Noma & Zone 8 Secretariat',
-    tier: 'Tier 2',
-    tierLabel: 'Tier 2 Mid-Range',
-    description: 'Kogi State Government Complex, House of Assembly, PDP Secretariat, Meme River',
-    landmarks: ['State Secretariat Complex', 'Zone 8 Junction', 'PDP Secretariat', 'Sarkin Noma Main Gate'],
-    baseTariff: 1200,
-  },
-  {
-    id: 'hajiya-k-plaza',
-    name: 'Hajiya K Plaza & Cantonment Road',
-    tier: 'Tier 2',
-    tierLabel: 'Tier 2 Mid-Range',
-    description: 'Commercial shopping plaza cluster, Cantonment junction, Army Day axis',
-    landmarks: ['Hajiya K Plaza', 'Cantonment Barracks Gate', 'Kwara Waterboard Axis'],
-    baseTariff: 1200,
-  },
-  {
-    id: 'kabawa',
-    name: 'Kabawa & Marine Road',
-    tier: 'Tier 2',
-    tierLabel: 'Tier 2 Mid-Range',
-    description: 'Historic riverside quarters, Maigari Palace, Confluence water front',
-    landmarks: ['Maigari Palace', 'Old Marine Police Post', 'Kabawa Riverside'],
-    baseTariff: 1200,
-  },
-  {
-    id: 'crusher',
-    name: 'Crusher & Sub-urban Axis',
-    tier: 'Tier 2',
-    tierLabel: 'Tier 2 Mid-Range',
-    description: 'Murtala Mohammed Way extension toward Crusher community',
-    landmarks: ['Crusher Junction', 'Quarry Outpost', 'Murtala Way Extension'],
-    baseTariff: 1200,
-  },
-
-  // 🔴 Tier 3: Peripheral Extended Zones (Highway corridors, University & Poly outposts)
-  {
-    id: 'felele-poly',
-    name: 'Felele & Federal Poly Corridor',
-    tier: 'Tier 3',
-    tierLabel: 'Tier 3 Peripheral',
-    description: 'Federal Polytechnic campus axis, Felele Express, student hostels',
-    landmarks: ['Federal Poly Main Gate', 'Felele Express Junction', 'Old Poly Quarters'],
-    baseTariff: 2000,
-  },
-  {
-    id: 'nataco',
-    name: 'Nataco Area & A2 Highway',
-    tier: 'Tier 3',
-    tierLabel: 'Tier 3 Peripheral',
-    description: 'Interstate motor parks, Nataco express transit hub, Abuja-Lokoja Highway',
-    landmarks: ['Nataco Park Gate', 'A2 Expressway Overpass', 'GT Foods Nataco'],
-    baseTariff: 2000,
+    tierLabel: 'Ganaja Junction Axis',
   },
   {
     id: 'ganaja-village',
-    name: 'Ganaja Village & 500 Housing Units',
-    tier: 'Tier 3',
-    tierLabel: 'Tier 3 Peripheral',
+    name: 'Ganaja Village',
+    coordinates: { x: 7.5, y: -6.5 },
+    baseTariff: 1800,
     description: 'Extended residential settlements, Gadumo, 500 Housing Units estate, Ajaokuta road',
     landmarks: ['500 Housing Units Gate', 'Gadumo Junction', 'Ganaja Village Square'],
-    baseTariff: 2000,
+    tier: 'Tier 3',
+    tierLabel: 'Ganaja Village',
+  },
+  {
+    id: 'gra',
+    name: 'GRA (Government Reservation Area)',
+    coordinates: { x: -0.3, y: -1.2 },
+    baseTariff: 800,
+    description: 'Government Reserved Area, Federal Medical Centre (FMC), Aliu Attah Road',
+    landmarks: ['FMC Lokoja Gate', 'Misturah Plaza', 'Township Stadium Axis', 'Aliu Attah Road'],
+    tier: 'Tier 1',
+    tierLabel: 'GRA',
+  },
+  {
+    id: 'kabawa',
+    name: 'Kabawa',
+    coordinates: { x: 0.8, y: 1.5 },
+    baseTariff: 900,
+    description: 'Historic riverside quarters, Maigari Palace, Confluence water front',
+    landmarks: ['Maigari Palace', 'Old Marine Police Post', 'Kabawa Riverside'],
+    tier: 'Tier 2',
+    tierLabel: 'Kabawa',
+  },
+  {
+    id: 'kporoka',
+    name: 'Kporoka',
+    coordinates: { x: 0.5, y: -0.3 },
+    baseTariff: 800,
+    description: 'Downtown commercial and banking axis near central market',
+    landmarks: ['Kporoka Junction', 'Central Commercial Road', 'Post Office Axis'],
+    tier: 'Tier 1',
+    tierLabel: 'Kporoka',
+  },
+  {
+    id: 'lokongoma-phase-1',
+    name: 'Lokongoma Phase I',
+    coordinates: { x: 2.5, y: -2.8 },
+    baseTariff: 800,
+    description: 'Prime residential enclave, IBB Way, Phase 1 Police Post, Kefas Hall axis',
+    landmarks: ['Phase 1 Police Post', 'IBB Way Avenue', 'Kefas Hall Axis'],
+    tier: 'Tier 1',
+    tierLabel: 'Lokongoma Phase I',
+  },
+  {
+    id: 'lokongoma-phase-2',
+    name: 'Lokongoma Phase II',
+    coordinates: { x: 3.5, y: -3.5 },
+    baseTariff: 800,
+    description: 'Somep Plaza, Candef Energies, Phase 2 commercial corridor along IBB Way',
+    landmarks: ['Somep Plaza', 'Phase 2 Avenue', 'Candef Energies'],
+    tier: 'Tier 1',
+    tierLabel: 'Lokongoma Phase II',
+  },
+  {
+    id: 'marine-quarters',
+    name: 'Marine Quarters',
+    coordinates: { x: 0.4, y: 1.2 },
+    baseTariff: 900,
+    description: 'Historic river port and marine heritage quarter',
+    landmarks: ['Inland Waterways Jetty', 'Marine Road', 'Old Marine Police Post'],
+    tier: 'Tier 2',
+    tierLabel: 'Marine Quarters',
+  },
+  {
+    id: 'meme-bridge-area',
+    name: 'Meme Bridge Area',
+    coordinates: { x: 2.0, y: 0.5 },
+    baseTariff: 900,
+    description: 'River crossing corridor connecting central town and Zone 8',
+    landmarks: ['Meme River Crossing', 'Meme Bridge Road', 'Water Works Axis'],
+    tier: 'Tier 2',
+    tierLabel: 'Meme Bridge Area',
+  },
+  {
+    id: 'mount-patti-road',
+    name: 'Mount Patti Road / Club Area',
+    coordinates: { x: -0.8, y: 1.0 },
+    baseTariff: 900,
+    description: 'Elevated scenic hillside community and historic Lokoja club grounds',
+    landmarks: ['Mount Patti Ascent Road', 'Lokoja Club 1901', 'Tourist Lookout Point'],
+    tier: 'Tier 2',
+    tierLabel: 'Mount Patti Road',
+  },
+  {
+    id: 'nataco',
+    name: 'Nataco / Nataco Junction',
+    coordinates: { x: -1.5, y: 4.5 },
+    baseTariff: 1600,
+    description: 'Interstate motor parks, Nataco express transit hub, Abuja-Lokoja Highway',
+    landmarks: ['Nataco Park Gate', 'A2 Expressway Overpass', 'GT Foods Nataco'],
+    tier: 'Tier 3',
+    tierLabel: 'Nataco',
+  },
+  {
+    id: 'new-mami-market',
+    name: 'New Mami Market Area',
+    coordinates: { x: 2.5, y: 1.8 },
+    baseTariff: 1000,
+    description: 'Lively trade hub adjacent to cantonment grounds',
+    landmarks: ['New Mami Market Entrance', 'Cantonment North Gate'],
+    tier: 'Tier 2',
+    tierLabel: 'New Mami Market Area',
+  },
+  {
+    id: 'old-poly-quarters',
+    name: 'Old Poly Quarters',
+    coordinates: { x: -2.5, y: 7.2 },
+    baseTariff: 1800,
+    description: 'Polytechnic staff and student residential enclave along Felele corridor',
+    landmarks: ['Old Poly Quarters Road', 'Poly Staff Enclave'],
+    tier: 'Tier 3',
+    tierLabel: 'Old Poly Quarters',
+  },
+  {
+    id: 'otokiti',
+    name: 'Otokiti Housing Estate',
+    coordinates: { x: -2.5, y: -3.0 },
+    baseTariff: 1200,
+    description: 'Organized residential estate along southwestern ring bypass',
+    landmarks: ['Otokiti Estate Main Gate', 'Western Ring Bypass Axis'],
+    tier: 'Tier 2',
+    tierLabel: 'Otokiti',
+  },
+  {
+    id: 'paparanda',
+    name: 'Paparanda',
+    coordinates: { x: 0, y: 0 },
+    baseTariff: 800,
+    description: 'Central commercial district, Paparanda Square, Central Market, High Street',
+    landmarks: ['Paparanda Square', 'Central Post Office', 'High Street'],
+    tier: 'Tier 1',
+    tierLabel: 'Paparanda',
+  },
+  {
+    id: 'sabon-gari',
+    name: 'Sabon Gari Lokoja',
+    coordinates: { x: 0.7, y: 0.4 },
+    baseTariff: 800,
+    description: 'Historic commercial and residential community along Ankpa Road corridor',
+    landmarks: ['Sabon Gari Market', 'Ankpa Road Junction', 'Crowther Hill Foot'],
+    tier: 'Tier 1',
+    tierLabel: 'Sabon Gari Lokoja',
+  },
+  {
+    id: 'sarkin-noma',
+    name: 'Sarkin Noma',
+    coordinates: { x: 4.2, y: 2.0 },
+    baseTariff: 1100,
+    description: 'Thriving township community across Meme River bridge',
+    landmarks: ['Sarkin Noma Main Gate', 'Meme River North Bank', 'Fish Market'],
+    tier: 'Tier 2',
+    tierLabel: 'Sarkin Noma',
+  },
+  {
+    id: 'workers-village',
+    name: 'Workers Village',
+    coordinates: { x: -3.8, y: -3.5 },
+    baseTariff: 1400,
+    description: 'Civil service residential quarters towards Crusher axis',
+    landmarks: ['Workers Village Junction', 'Crusher Outpost Road'],
+    tier: 'Tier 2',
+    tierLabel: 'Workers Village',
   },
   {
     id: 'zango',
-    name: 'Zango Daji & Outer Bypass',
-    tier: 'Tier 3',
-    tierLabel: 'Tier 3 Peripheral',
-    description: 'Outlying community beyond Phase 2 towards western hills',
+    name: 'Zango',
+    coordinates: { x: -4.5, y: -2.0 },
+    baseTariff: 1600,
+    description: 'Outlying community beyond Phase 2 towards western hills and outer ring',
     landmarks: ['Zango Central Mosque', 'Outer Ring Bypass'],
-    baseTariff: 2000,
+    tier: 'Tier 3',
+    tierLabel: 'Zango',
+  },
+  {
+    id: 'zone-8',
+    name: 'Zone 8 / Secretariat Area',
+    coordinates: { x: 3.8, y: 1.2 },
+    baseTariff: 1100,
+    description: 'Kogi State Government Complex, House of Assembly, High Courts, Judiciary',
+    landmarks: ['State Secretariat Complex', 'Zone 8 Junction', 'Kogi House of Assembly', 'Customary Court of Appeal'],
+    tier: 'Tier 2',
+    tierLabel: 'Zone 8 / Secretariat Area',
   },
 ];
 
 // Vendor Location Mapping
+// Aliases mapping old IDs to current neighborhood IDs for backwards compatibility
+export const LEGACY_ID_MAP: Record<string, string> = {
+  'lokongoma': 'lokongoma-phase-1',
+  'ganaja-junction': 'ganaja-junction-axis',
+  'ankpa-road': 'sabon-gari',
+  'hajiya-k-plaza': 'barracks-area',
+  'crusher': 'workers-village',
+  'felele-poly': 'felele',
+};
+
 // Associates every vendor with their actual physical kitchen location in Lokoja
 const VENDOR_LOCATION_MAP: Record<string, string> = {
-  // Paparanda Square & Apata (Tier 1)
+  // Paparanda
   'chicken-republic': 'paparanda',
   'vendor-cr': 'paparanda',
   'mama-ngozi': 'paparanda',
   'vendor-mn': 'paparanda',
 
-  // Lokongoma Phase 1 & 2 (Tier 1)
-  'craving-spot': 'lokongoma',
-  'vendor-cs': 'lokongoma',
-  'treasures-lokongoma': 'lokongoma',
-  'vendor-tl': 'lokongoma',
+  // Lokongoma Phase 1 & 2
+  'craving-spot': 'lokongoma-phase-2',
+  'vendor-cs': 'lokongoma-phase-2',
+  'treasures-lokongoma': 'lokongoma-phase-1',
+  'vendor-tl': 'lokongoma-phase-1',
 
-  // Ganaja Junction & Flyover (Tier 1)
-  'foodcastle': 'ganaja-junction',
-  'vendor-fc': 'ganaja-junction',
-  'treasures-bakery': 'ganaja-junction',
-  'vendor-tb': 'ganaja-junction',
+  // Ganaja Junction Axis
+  'foodcastle': 'ganaja-junction-axis',
+  'vendor-fc': 'ganaja-junction-axis',
+  'treasures-bakery': 'ganaja-junction-axis',
+  'vendor-tb': 'ganaja-junction-axis',
 
-  // Ankpa Road (Tier 1)
-  'treasures-ankpa': 'ankpa-road',
-  'vendor-te': 'ankpa-road',
+  // Sabon Gari Lokoja / Ankpa Road
+  'treasures-ankpa': 'sabon-gari',
+  'vendor-te': 'sabon-gari',
 
-  // GRA & Hospital Road (Tier 1)
+  // GRA (Government Reservation Area)
   'misi-t-gra': 'gra',
   'vendor-mt-gra': 'gra',
 
-  // Adankolo Road & Market (Tier 1)
+  // Adankolo
   'misi-t-adankolo': 'adankolo',
   'vendor-mt-adk': 'adankolo',
   'locafud-kitchen': 'adankolo',
@@ -184,23 +314,23 @@ const VENDOR_LOCATION_MAP: Record<string, string> = {
   'olive-food-court': 'adankolo',
   'vendor-of': 'adankolo',
 
-  // Zone 8 & Sarkin Noma (Tier 2)
+  // Zone 8 / Secretariat Area
   'biteease': 'zone-8',
   'vendor-be': 'zone-8',
 
-  // Hajiya K Plaza / Cantonment (Tier 2)
-  'amak-restaurant': 'hajiya-k-plaza',
-  'vendor-ar': 'hajiya-k-plaza',
+  // Barracks Area (Army & Police)
+  'amak-restaurant': 'barracks-area',
+  'vendor-ar': 'barracks-area',
 
-  // Felele & Federal Poly (Tier 3)
-  'spag-king': 'felele-poly',
-  'vendor-sk': 'felele-poly',
+  // Felele
+  'spag-king': 'felele',
+  'vendor-sk': 'felele',
 
-  // Ganaja Village & 500 Housing (Tier 3)
+  // Ganaja Village
   'shawarma-grills': 'ganaja-village',
   'vendor-sg': 'ganaja-village',
 
-  // Nataco & A2 Highway (Tier 3)
+  // Nataco / Nataco Junction
   'gt-foods': 'nataco',
   'vendor-gt': 'nataco',
 };
@@ -226,14 +356,15 @@ export function resolveVendorLocation(vendor: {
 
   // 2. Lookup by vendor name keywords
   if (name.includes('chicken republic') || name.includes('mama ngozi')) return LOKOJA_LOCATIONS.find(l => l.id === 'paparanda')!;
-  if (name.includes('craving spot') || name.includes('lokongoma')) return LOKOJA_LOCATIONS.find(l => l.id === 'lokongoma')!;
-  if (name.includes('foodcastle') || (name.includes('treasures') && name.includes('bakery'))) return LOKOJA_LOCATIONS.find(l => l.id === 'ganaja-junction')!;
-  if (name.includes('treasures') && name.includes('ankpa')) return LOKOJA_LOCATIONS.find(l => l.id === 'ankpa-road')!;
+  if (name.includes('craving spot')) return LOKOJA_LOCATIONS.find(l => l.id === 'lokongoma-phase-2')!;
+  if (name.includes('treasures') && name.includes('lokongoma')) return LOKOJA_LOCATIONS.find(l => l.id === 'lokongoma-phase-1')!;
+  if (name.includes('foodcastle') || (name.includes('treasures') && name.includes('bakery'))) return LOKOJA_LOCATIONS.find(l => l.id === 'ganaja-junction-axis')!;
+  if (name.includes('treasures') && name.includes('ankpa')) return LOKOJA_LOCATIONS.find(l => l.id === 'sabon-gari')!;
   if (name.includes('gra') || name.includes('hospital')) return LOKOJA_LOCATIONS.find(l => l.id === 'gra')!;
   if (name.includes('adankolo') || name.includes('locafud') || name.includes('olive')) return LOKOJA_LOCATIONS.find(l => l.id === 'adankolo')!;
-  if (name.includes('biteease') || name.includes('zone 8') || name.includes('sarkin noma')) return LOKOJA_LOCATIONS.find(l => l.id === 'zone-8')!;
-  if (name.includes('amak') || name.includes('hajiya')) return LOKOJA_LOCATIONS.find(l => l.id === 'hajiya-k-plaza')!;
-  if (name.includes('spag') || name.includes('felele') || name.includes('poly')) return LOKOJA_LOCATIONS.find(l => l.id === 'felele-poly')!;
+  if (name.includes('biteease') || name.includes('zone 8') || name.includes('secretariat')) return LOKOJA_LOCATIONS.find(l => l.id === 'zone-8')!;
+  if (name.includes('amak') || name.includes('barracks') || name.includes('cantonment')) return LOKOJA_LOCATIONS.find(l => l.id === 'barracks-area')!;
+  if (name.includes('spag') || name.includes('felele') || name.includes('poly')) return LOKOJA_LOCATIONS.find(l => l.id === 'felele')!;
   if (name.includes('shawarma') || name.includes('ganaja village')) return LOKOJA_LOCATIONS.find(l => l.id === 'ganaja-village')!;
   if (name.includes('gt food') || name.includes('nataco')) return LOKOJA_LOCATIONS.find(l => l.id === 'nataco')!;
 
@@ -244,8 +375,8 @@ export function resolveVendorLocation(vendor: {
     }
   }
 
-  // Default fallback: Tier 1 Core Lokongoma
-  return LOKOJA_LOCATIONS[0];
+  // Default fallback: Lokongoma Phase I
+  return LOKOJA_LOCATIONS.find(l => l.id === 'lokongoma-phase-1') || LOKOJA_LOCATIONS[0];
 }
 
 /**
@@ -255,52 +386,63 @@ export function calculateLocationDispatchFee(
   vendorLocation: LokojaLocationZone,
   customerLocation: LokojaLocationZone
 ): { fee: number; reason: string; eta: string } {
-  // Case 1: Same exact neighborhood (e.g. Lokongoma to Lokongoma)
+  // Euclidean distance in km calculated from verified Lokoja coordinates
+  const vCoord = vendorLocation.coordinates || { x: 0, y: 0 };
+  const cCoord = customerLocation.coordinates || { x: 0, y: 0 };
+  const dx = vCoord.x - cCoord.x;
+  const dy = vCoord.y - cCoord.y;
+  const dist = Math.round(Math.sqrt(dx * dx + dy * dy) * 10) / 10;
+
+  // Case 1: Same exact neighborhood (e.g. Adankolo to Adankolo, Lokongoma Phase I to Lokongoma Phase I)
   if (vendorLocation.id === customerLocation.id) {
-    if (vendorLocation.tier === 'Tier 1') {
-      return {
-        fee: 800,
-        reason: `Intra-${vendorLocation.name} immediate transit (fastest turnaround)`,
-        eta: '10–15 mins'
-      };
-    }
     return {
-      fee: vendorLocation.baseTariff,
-      reason: `Intra-${vendorLocation.name} local dispatch`,
-      eta: '12–18 mins'
+      fee: 800,
+      reason: `Intra-${vendorLocation.name} immediate transit`,
+      eta: '10–15 mins'
     };
   }
 
-  // Case 2: Both locations are in Tier 1 Core (e.g. Paparanda to Lokongoma, GRA to Ganaja Junction)
-  if (vendorLocation.tier === 'Tier 1' && customerLocation.tier === 'Tier 1') {
+  // Case 2: Adjacent / short distance (dist <= 1.8 km)
+  if (dist <= 1.8) {
     return {
       fee: 800,
-      reason: `${vendorLocation.name} → ${customerLocation.name} • Tier 1 Core intra-city corridor`,
+      reason: `${vendorLocation.name} → ${customerLocation.name} • Local neighborhood dispatch (~${dist} km)`,
+      eta: '10–15 mins'
+    };
+  }
+
+  // Case 3: Standard urban transit (1.8 km < dist <= 4.5 km)
+  if (dist <= 4.5) {
+    return {
+      fee: 1000,
+      reason: `${vendorLocation.name} → ${customerLocation.name} • Urban corridor dispatch (~${dist} km)`,
       eta: '15–20 mins'
     };
   }
 
-  // Case 3: Either is Tier 3 Peripheral (Highway corridor / Federal Poly / Nataco / Ganaja Village)
-  if (vendorLocation.tier === 'Tier 3' || customerLocation.tier === 'Tier 3') {
-    if (vendorLocation.tier === 'Tier 3' && customerLocation.tier === 'Tier 3') {
-      return {
-        fee: 2200,
-        reason: `${vendorLocation.name} → ${customerLocation.name} • Cross-highway long-haul corridor`,
-        eta: '30–45 mins'
-      };
-    }
+  // Case 4: Mid-range cross-town dispatch (4.5 km < dist <= 7.5 km)
+  if (dist <= 7.5) {
     return {
-      fee: 2000,
-      reason: `${vendorLocation.name} → ${customerLocation.name} • Extended Tier 3 peripheral transit`,
+      fee: 1400,
+      reason: `${vendorLocation.name} → ${customerLocation.name} • Cross-town dispatch (~${dist} km)`,
+      eta: '20–30 mins'
+    };
+  }
+
+  // Case 5: Extended perimeter corridor dispatch (7.5 km < dist <= 11.0 km)
+  if (dist <= 11.0) {
+    return {
+      fee: 1800,
+      reason: `${vendorLocation.name} → ${customerLocation.name} • Extended perimeter corridor (~${dist} km)`,
       eta: '25–40 mins'
     };
   }
 
-  // Case 4: Tier 1 to Tier 2, or Tier 2 to Tier 2 (e.g. Zone 8 / Sarkin Noma cross-Meme river)
+  // Case 6: Long-haul highway dispatch (dist > 11.0 km)
   return {
-    fee: 1200,
-    reason: `${vendorLocation.name} → ${customerLocation.name} • Tier 2 Mid-Range cross-zone bridge`,
-    eta: '20–30 mins'
+    fee: 2400,
+    reason: `${vendorLocation.name} → ${customerLocation.name} • Long-haul highway dispatch (~${dist} km)`,
+    eta: '35–50 mins'
   };
 }
 
@@ -358,10 +500,11 @@ export interface MultiVendorCalculationResult {
  */
 export function calculateMultiVendorOrderTotals(
   items: CartItem[],
-  customerLocationId: string = 'lokongoma',
+  customerLocationId: string = 'lokongoma-phase-1',
   customerAddressText: string = 'Lokongoma Phase 1, Near Police Post'
 ): MultiVendorCalculationResult {
-  const customerLoc = LOKOJA_LOCATIONS.find(l => l.id === customerLocationId) || LOKOJA_LOCATIONS[0];
+  const resolvedId = LEGACY_ID_MAP[customerLocationId] || customerLocationId;
+  const customerLoc = LOKOJA_LOCATIONS.find(l => l.id === resolvedId || l.name.toLowerCase() === customerLocationId.toLowerCase()) || LOKOJA_LOCATIONS[0];
 
   // 1. Group items by distinct vendor
   const vendorMap = new Map<string, {
