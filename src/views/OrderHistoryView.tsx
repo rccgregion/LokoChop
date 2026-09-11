@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ActiveView, CartItem } from '../types';
+import { AppLogo } from '../components/AppLogo';
 import { MOCK_ORDERS } from '../data/mockData';
 import { orderService, LiveOrder, SmsLogEntry, LOKOCHOP_SUPPORT_WHATSAPP } from '../services/orderService';
 import { 
@@ -337,7 +338,10 @@ export const OrderHistoryView: React.FC<OrderHistoryViewProps> = ({ onNavigate, 
               {selectedReceipt === order.id && (
                 <div className="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 text-xs space-y-2 animate-fade-in">
                   <div className="flex items-center justify-between border-b border-outline-variant/20 pb-2">
-                    <span className="font-headline font-bold text-on-surface">Official LokoChop e-Receipt</span>
+                    <div className="flex items-center gap-2">
+                      <AppLogo size="xs" />
+                      <span className="font-headline font-bold text-on-surface">Official LokoChop e-Receipt</span>
+                    </div>
                     <span className="font-mono text-[11px] text-tertiary">REF: LKCP-{order.id}</span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">

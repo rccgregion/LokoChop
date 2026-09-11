@@ -438,41 +438,43 @@ export const DishesFilterBar: React.FC<DishesFilterBarProps> = ({
 
               {/* Expanded Extra Tags */}
               <AnimatePresence>
-                {(showMoreTags || isExtraTagActive) && extraTags.map(tag => {
-                  const isSelected = selectedTag.toLowerCase() === tag.name.toLowerCase();
+                {(showMoreTags || isExtraTagActive)
+                  ? extraTags.map(tag => {
+                      const isSelected = selectedTag.toLowerCase() === tag.name.toLowerCase();
 
-                  return (
-                    <motion.button
-                      key={tag.name}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      transition={{ duration: 0.15 }}
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
-                      onClick={() => onSelectTag(isSelected ? 'all' : tag.name)}
-                      className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all cursor-pointer border ${
-                        isSelected
-                          ? 'bg-secondary text-on-secondary border-secondary font-bold shadow-xs'
-                          : 'bg-surface-container-lowest text-on-surface-variant border-outline-variant/30 hover:border-secondary/40 hover:text-on-surface hover:bg-surface-container-high'
-                      }`}
-                    >
-                      {isSelected ? (
-                        <Check className="w-3 h-3 text-white" />
-                      ) : (
-                        <span className="text-secondary font-bold">#</span>
-                      )}
-                      <span>{tag.name.replace(/^#/, '')}</span>
-                      {tag.count > 0 && (
-                        <span className={`text-[10px] px-1 py-0.2 rounded-md font-price-display font-semibold ${
-                          isSelected ? 'bg-white/20 text-white' : 'bg-surface-container-high text-on-surface-variant/80'
-                        }`}>
-                          {tag.count}
-                        </span>
-                      )}
-                    </motion.button>
-                  );
-                })}
+                      return (
+                        <motion.button
+                          key={tag.name}
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.9 }}
+                          transition={{ duration: 0.15 }}
+                          whileHover={{ scale: 1.03 }}
+                          whileTap={{ scale: 0.97 }}
+                          onClick={() => onSelectTag(isSelected ? 'all' : tag.name)}
+                          className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all cursor-pointer border ${
+                            isSelected
+                              ? 'bg-secondary text-on-secondary border-secondary font-bold shadow-xs'
+                              : 'bg-surface-container-lowest text-on-surface-variant border-outline-variant/30 hover:border-secondary/40 hover:text-on-surface hover:bg-surface-container-high'
+                          }`}
+                        >
+                          {isSelected ? (
+                            <Check className="w-3 h-3 text-white" />
+                          ) : (
+                            <span className="text-secondary font-bold">#</span>
+                          )}
+                          <span>{tag.name.replace(/^#/, '')}</span>
+                          {tag.count > 0 && (
+                            <span className={`text-[10px] px-1 py-0.2 rounded-md font-price-display font-semibold ${
+                              isSelected ? 'bg-white/20 text-white' : 'bg-surface-container-high text-on-surface-variant/80'
+                            }`}>
+                              {tag.count}
+                            </span>
+                          )}
+                        </motion.button>
+                      );
+                    })
+                  : null}
               </AnimatePresence>
 
             </div>
@@ -483,8 +485,9 @@ export const DishesFilterBar: React.FC<DishesFilterBarProps> = ({
 
       {/* 3. ACTIVE FILTERS BREADCRUMBS ROW (Visible when any filter applied) */}
       <AnimatePresence>
-        {hasActiveFilters && (
+        {hasActiveFilters ? (
           <motion.div 
+            key="active-filters-bar"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
@@ -558,7 +561,7 @@ export const DishesFilterBar: React.FC<DishesFilterBarProps> = ({
               Clear All
             </button>
           </motion.div>
-        )}
+        ) : null}
       </AnimatePresence>
 
     </motion.div>

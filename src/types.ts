@@ -9,7 +9,9 @@ export type ActiveView =
   | 'admin-portal'
   | 'vendor-onboarding'
   | 'rider-portal'
-  | 'faqs-legal';
+  | 'faqs-legal'
+  | 'about'
+  | 'contact-us';
 
 export type DeliveryTier = 'Tier 1' | 'Tier 2' | 'Tier 3';
 
@@ -32,6 +34,10 @@ export interface FoodItem {
   signature?: boolean;
   cluster?: string;
   offeringType?: 'Signature Dish' | 'Primary Offering' | 'Sides & Extras' | 'Snacks & Bakery' | 'Beverages';
+  isFamilyBulk?: boolean;
+  familyServings?: string;
+  portionSize?: 'single' | 'family';
+  isPremiumTier?: boolean;
 }
 
 export interface CartItem {
@@ -43,6 +49,9 @@ export interface CartItem {
   vendorName?: string;
   vendorId?: string;
   foodId?: string;
+  addedBy?: string;
+  isFamilyBulk?: boolean;
+  familyServings?: string;
 }
 
 export interface CustomerOrder {
@@ -50,11 +59,16 @@ export interface CustomerOrder {
   vendorName: string;
   createdAt: string;
   status: 'awaiting_payment' | 'in_kitchen' | 'out_for_delivery' | 'delivered' | 'cancelled';
-  items: { name: string; quantity: number; price: number }[];
+  items: { name: string; quantity: number; price: number; addedBy?: string }[];
   deliveryFee: number;
   tier: string;
   destination: string;
   totalAmount: number;
+  scheduled_window?: string;
+  isPrivateDelivery?: boolean;
+  privateRefCode?: string;
+  isPremiumPackaging?: boolean;
+  groupOrderCode?: string;
 }
 
 export interface Restaurant {
@@ -77,6 +91,9 @@ export interface Restaurant {
   cluster?: string;
   subLocality?: string;
   imageUrl?: string;
+  expectedDeliveryTime?: string;
+  hasFamilyMeals?: boolean;
+  hasPremiumMenu?: boolean;
 }
 
 export interface NeighborhoodZone {
@@ -108,6 +125,8 @@ export interface OrderRecord {
   status: 'Payment Mismatched' | 'Confirmed' | 'Awaiting Transfer' | 'Delivered / Disputed' | 'Delivered';
   timeAgo: string;
   tier: DeliveryTier;
+  scheduled_window?: string;
+  isPrivateDelivery?: boolean;
 }
 
 export interface DisputeRecord {

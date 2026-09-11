@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ActiveView, AdminUser } from '../types';
+import { AppLogo } from '../components/AppLogo';
 import { MOCK_ADMIN_ACCOUNTS } from '../data/authData';
 import { 
   ShieldCheck, 
@@ -116,8 +117,11 @@ export const AdminLoginView: React.FC<AdminLoginViewProps> = ({
           <div className="absolute top-0 right-0 -mt-10 -mr-10 w-44 h-44 rounded-full bg-primary/20 blur-2xl pointer-events-none"></div>
           
           <div className="space-y-4 relative z-10">
-            <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center text-primary shadow-inner border border-white/10">
-              <ShieldCheck className="w-7 h-7 text-primary" />
+            <div className="flex items-center gap-3">
+              <AppLogo size="lg" />
+              <div className="w-10 h-10 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center text-primary shadow-inner border border-white/10">
+                <ShieldCheck className="w-6 h-6 text-primary" />
+              </div>
             </div>
             <div>
               <span className="text-[11px] font-bold uppercase tracking-wider text-primary">Master Command Terminal</span>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActiveView } from '../types';
 import { AppLogo } from './AppLogo';
-import { Waves, Phone, ShieldCheck, Bike, FileText } from 'lucide-react';
+import { Waves, Phone, ShieldCheck, Bike, FileText, Mail } from 'lucide-react';
 
 interface FooterProps {
   onNavigate: (view: ActiveView) => void;
@@ -29,16 +29,19 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenTermsModal }) 
         {/* Quick Delivery Landmarks & Operational Links */}
         <div className="flex flex-wrap justify-center md:justify-end gap-x-5 gap-y-2 text-xs font-medium items-center">
           <button 
-            onClick={() => onNavigate('neighborhoods')} 
-            className="hover:text-primary-fixed hover:underline transition-colors cursor-pointer"
+            onClick={() => onNavigate('contact-us')} 
+            className="hover:text-amber-300 hover:underline transition-colors cursor-pointer font-bold text-amber-200 flex items-center gap-1"
+            title="Get in touch with LokoChop support, office location and helplines"
           >
-            Paparanda Junction
+            <Mail className="w-3.5 h-3.5 text-amber-300" />
+            <span>Contact Us</span>
           </button>
           <button 
-            onClick={() => onNavigate('neighborhoods')} 
-            className="hover:text-primary-fixed hover:underline transition-colors cursor-pointer"
+            onClick={() => onNavigate('about')} 
+            className="hover:text-amber-300 hover:underline transition-colors cursor-pointer font-bold text-amber-200 flex items-center gap-1"
+            title="Learn about the LokoChop logo, colors, and Confluence food heritage"
           >
-            Ganaja Road
+            <span>About Us</span>
           </button>
           <button 
             onClick={() => onNavigate('rider-portal')} 

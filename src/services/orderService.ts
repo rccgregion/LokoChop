@@ -80,6 +80,13 @@ export interface LiveOrder {
   riderPhone?: string;
   riderPickedUpAt?: string;
   deliveredAt?: string;
+  scheduled_window?: string;
+  isPremiumTier?: boolean;
+  isPrivateDelivery?: boolean;
+  privateReferenceCode?: string;
+  groupCartCode?: string;
+  isGroupCart?: boolean;
+  memberCount?: number;
 }
 
 export interface SmsLogEntry {

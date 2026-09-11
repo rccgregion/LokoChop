@@ -21,8 +21,13 @@ import { AdminLoginView } from './views/AdminLoginView';
 import { VendorOnboardingView } from './views/VendorOnboardingView';
 import { RiderPortalView } from './views/RiderPortalView';
 import { TransparencyAndLegalView } from './views/TransparencyAndLegalView';
+import { AboutView } from './views/AboutView';
+import { ContactUsView } from './views/ContactUsView';
 import { TermsModal } from './components/TermsModal';
 import { PwaInstallBanner } from './components/PwaInstallBanner';
+import { AmbientBackground } from './components/AmbientBackground';
+import { FlyToCartRenderer } from './components/FlyToCartParticle';
+import { FloatingMobileCartCapsule } from './components/FloatingMobileCartCapsule';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<ActiveView>('marketplace');
@@ -34,6 +39,22 @@ export default function App() {
   const [isTermsModalOpen, setIsTermsModalOpen] = useState<boolean>(false);
   const [selectedVendorId, setSelectedVendorId] = useState<string>('craving-spot');
   const [selectedZoneKey, setSelectedZoneKey] = useState<string>('tier3');
+
+  // Customer Selected Delivery Location for Neighborhood-wide Sync
+  const [selectedDeliveryLocation, setSelectedDeliveryLocation] = useState<string>(() => {
+    try {
+      return localStorage.getItem('lokochop_delivery_location') || 'lokongoma-phase-1';
+    } catch {
+      return 'lokongoma-phase-1';
+    }
+  });
+
+  const handleSelectDeliveryLocation = (locId: string) => {
+    setSelectedDeliveryLocation(locId);
+    try {
+      localStorage.setItem('lokochop_delivery_location', locId);
+    } catch {}
+  };
 
   // Auth Sessions for Vendor and Admin Portals
   const [vendorUser, setVendorUser] = useState<VendorUser | null>(() => {
@@ -227,7 +248,12 @@ export default function App() {
   };
 
   return (
-    <div id="lokoja-app-root" className="min-h-screen bg-surface text-on-surface flex flex-col font-body antialiased pb-[calc(env(safe-area-inset-bottom,0px)+4.5rem)] md:pb-0">
+    <div id="lokoja-app-root" className="min-h-screen w-full overflow-x-clip bg-surface text-on-surface flex flex-col font-body antialiased pb-[calc(env(safe-area-inset-bottom,0px)+4.5rem)] md:pb-0 relative">
+      {/* Ambient Floating Dynamic Meshes/Blobs (Terracotta #E05A47, Golden Palm #F4A261, Deep Basil #2A9D8F) */}
+      <AmbientBackground />
+
+      {/* Global Flying Food Particle Renderer */}
+      <FlyToCartRenderer />
       
       {/* Top Header Navigation */}
       <TopNavBar
@@ -245,14 +271,19 @@ export default function App() {
       />
 
       {/* Main View Container */}
-      <main className="flex-1">
+      <main className="flex-1 w-full">
         {currentView === 'marketplace' && (
           <MarketplaceView
             onAddToCart={handleAddToCart}
             onNavigate={handleNavigate}
             searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
             favoriteFoodIds={favoriteFoodIds}
             onToggleFavorite={handleToggleFavorite}
+            selectedDeliveryLocation={selectedDeliveryLocation}
+            onSelectDeliveryLocation={handleSelectDeliveryLocation}
+            cartItems={cartItems}
+            onUpdateCartQty={handleUpdateQuantity}
           />
         )}
 
@@ -350,12 +381,31 @@ export default function App() {
             onNavigate={handleNavigate}
           />
         )}
+
+        {currentView === 'about' && (
+          <AboutView
+            onNavigate={handleNavigate}
+          />
+        )}
+
+        {currentView === 'contact-us' && (
+          <ContactUsView
+            onNavigate={handleNavigate}
+          />
+        )}
       </main>
 
       {/* Shared Global Footer */}
       <Footer 
         onNavigate={handleNavigate} 
         onOpenTermsModal={() => setIsTermsModalOpen(true)}
+      />
+
+      {/* Floating Mobile Cart Capsule with Live Price Ticker */}
+      <FloatingMobileCartCapsule
+        items={cartItems}
+        cartTotal={cartTotal}
+        onOpenCart={() => setIsCartOpen(true)}
       />
 
       {/* Mobile Sticky Bottom Navigation */}
@@ -379,6 +429,8 @@ export default function App() {
         onConfirmPayment={handleConfirmPayment}
         onNavigate={handleNavigate}
         onOpenTerms={() => setIsTermsModalOpen(true)}
+        selectedDeliveryLocation={selectedDeliveryLocation}
+        onSelectDeliveryLocation={handleSelectDeliveryLocation}
       />
 
       {/* Notifications Modal */}

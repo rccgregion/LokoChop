@@ -673,3 +673,48 @@ export function calculateMultiVendorOrderTotals(
     hasCoLocatedVendors: sharedLocationCount > 0,
   };
 }
+
+export function getLocationTierBadgeInfo(locationIdOrName?: string): {
+  tier: 'Tier 1' | 'Tier 2' | 'Tier 3';
+  tariff: number;
+  timeRange: string;
+  badgeText: string;
+  badgeClass: string;
+  locationName: string;
+} {
+  const loc = LOKOJA_LOCATIONS.find(
+    l => l.id === locationIdOrName || l.name.toLowerCase() === (locationIdOrName || '').toLowerCase()
+  ) || LOKOJA_LOCATIONS[0];
+
+  const tariff = loc.baseTariff || 800;
+  const tier = loc.tier || (tariff <= 800 ? 'Tier 1' : tariff <= 1500 ? 'Tier 2' : 'Tier 3');
+
+  if (tier === 'Tier 1') {
+    return {
+      tier,
+      tariff,
+      timeRange: '10–15 min',
+      badgeText: `Standard ₦${tariff.toLocaleString()} delivery, 10–15 min`,
+      badgeClass: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/20',
+      locationName: loc.name,
+    };
+  } else if (tier === 'Tier 2') {
+    return {
+      tier,
+      tariff,
+      timeRange: '15–25 min',
+      badgeText: `Mid-range: ₦${tariff.toLocaleString()} delivery, 15–25 min`,
+      badgeClass: 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/20',
+      locationName: loc.name,
+    };
+  } else {
+    return {
+      tier,
+      tariff,
+      timeRange: '25–40 min',
+      badgeText: `Longer trip: ₦${tariff.toLocaleString()} delivery, 25–40 min`,
+      badgeClass: 'bg-primary/10 text-primary border-primary/20',
+      locationName: loc.name,
+    };
+  }
+}

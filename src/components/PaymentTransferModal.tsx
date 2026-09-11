@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { AppLogo } from './AppLogo';
 import { 
   LiveOrder, 
   buildVendorWhatsAppUrl, 
@@ -62,6 +63,9 @@ export const PaymentTransferModal: React.FC<PaymentTransferModalProps> = ({
       >
         {/* Header */}
         <div className="bg-emerald-700 text-white p-5 sm:p-6 text-center relative">
+          <div className="absolute top-4 left-4">
+            <AppLogo size="xs" />
+          </div>
           <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3 shadow-inner">
             <CheckCircle2 className="w-8 h-8 text-white animate-bounce" />
           </div>

@@ -27,7 +27,10 @@ import {
   CheckCircle2,
   AlertCircle,
   Layers,
-  ChevronDown
+  ChevronDown,
+  Crown,
+  Users,
+  ShieldCheck
 } from 'lucide-react';
 
 interface OrderTrackingViewProps {
@@ -193,10 +196,38 @@ export const OrderTrackingView: React.FC<OrderTrackingViewProps> = ({ onNavigate
                 </span>
                 <span className="text-xs text-primary font-bold tracking-wide font-mono">ORDER #{currentOrder.id}</span>
               </div>
-              <span className="text-xs text-secondary bg-secondary-fixed/50 px-3 py-1 rounded-full font-bold">
-                Vendor: {currentOrder.vendorName}
-              </span>
+              <div className="flex items-center gap-1.5 flex-wrap">
+                {currentOrder.isPremiumTier && (
+                  <span className="inline-flex items-center gap-1 text-[11px] bg-amber-500/20 text-amber-800 dark:text-amber-300 px-2.5 py-1 rounded-full font-bold border border-amber-500/30">
+                    <Crown className="w-3 h-3 text-amber-600" />
+                    <span>Premium: Hot Guaranteed</span>
+                  </span>
+                )}
+                {currentOrder.isPrivateDelivery && (
+                  <span className="inline-flex items-center gap-1 text-[11px] bg-primary/15 text-primary px-2.5 py-1 rounded-full font-bold border border-primary/25">
+                    <ShieldCheck className="w-3 h-3" />
+                    <span>Private #{currentOrder.privateReferenceCode}</span>
+                  </span>
+                )}
+                {currentOrder.isGroupCart && (
+                  <span className="inline-flex items-center gap-1 text-[11px] bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 px-2.5 py-1 rounded-full font-bold border border-indigo-500/25">
+                    <Users className="w-3 h-3" />
+                    <span>Group ({currentOrder.memberCount || 2} members)</span>
+                  </span>
+                )}
+                <span className="text-xs text-secondary bg-secondary-fixed/50 px-3 py-1 rounded-full font-bold">
+                  Vendor: {currentOrder.vendorName}
+                </span>
+              </div>
             </div>
+
+            {/* Scheduled Window Alert if applicable */}
+            {currentOrder.scheduled_window && (
+              <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/25 text-xs text-primary font-semibold flex items-center gap-2">
+                <Clock className="w-4 h-4 shrink-0" />
+                <span>Scheduled Delivery Window: <strong>{currentOrder.scheduled_window}</strong></span>
+              </div>
+            )}
 
             {/* Hero Status Banner */}
             <div>

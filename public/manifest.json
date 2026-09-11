@@ -7,10 +7,16 @@
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "theme_color": "#993B00",
-  "background_color": "#FFFBF5",
+  "theme_color": "#0E2A47",
+  "background_color": "#FAF4EB",
   "categories": ["food", "shopping", "lifestyle"],
   "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
     {
       "src": "/icons/icon-192.svg",
       "sizes": "192x192",

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
 import { ActiveView, VendorUser, AdminUser } from '../types';
 import { AppLogo } from './AppLogo';
 import { 
@@ -38,9 +39,21 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
   adminUser,
 }) => {
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+  const [isCartBouncing, setIsCartBouncing] = useState(false);
+
+  useEffect(() => {
+    const handleCartBounce = () => {
+      setIsCartBouncing(true);
+      const timer = setTimeout(() => setIsCartBouncing(false), 500);
+      return () => clearTimeout(timer);
+    };
+
+    window.addEventListener('lokochop-cart-bounce', handleCartBounce);
+    return () => window.removeEventListener('lokochop-cart-bounce', handleCartBounce);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-40 bg-surface/95 backdrop-blur-md text-on-surface border-b border-outline-variant/30 shadow-[0_2px_10px_-4px_rgba(31,27,16,0.06)] transition-all">
+    <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl text-on-surface border-b border-white/60 shadow-lg shadow-orange-500/5 transition-all">
       <div className="w-full px-3.5 sm:px-5 md:px-6 max-w-7xl mx-auto flex items-center justify-between h-16 sm:h-[4.25rem]">
         
         {/* Brand & Confluence Motif */}
@@ -174,17 +187,25 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
           </button>
 
           {/* Standout Primary Cart Trigger */}
-          <button 
+          <motion.button 
+            id="global-cart-icon-target"
+            animate={{
+              scale: isCartBouncing ? [1, 1.25, 0.95, 1.05, 1] : 1,
+            }}
+            transition={{ duration: 0.45, ease: 'easeOut' }}
             onClick={onOpenCart}
-            className="flex items-center gap-1.5 sm:gap-2.5 bg-primary hover:bg-primary-container text-white px-2.5 sm:px-4 py-2 rounded-xl sm:rounded-2xl shadow-xs hover:shadow-sm active:scale-95 transition-all cursor-pointer shrink-0"
+            className="flex items-center gap-1.5 sm:gap-2.5 bg-primary hover:bg-primary-container text-white px-2.5 sm:px-4 py-2 rounded-xl sm:rounded-2xl shadow-xs hover:shadow-md active:scale-95 transition-all cursor-pointer shrink-0"
             aria-label="Open food cart"
           >
             <div className="relative">
               <ShoppingBag className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-white" />
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-amber-400 text-stone-950 font-black text-[10px] w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
+                <motion.span 
+                  animate={{ scale: isCartBouncing ? [1, 1.4, 1] : 1 }}
+                  className="absolute -top-2 -right-2 bg-amber-400 text-stone-950 font-black text-[10px] w-4 h-4 rounded-full flex items-center justify-center shadow-xs"
+                >
                   {cartCount}
-                </span>
+                </motion.span>
               )}
             </div>
             <div className="flex items-baseline gap-1">
@@ -195,7 +216,7 @@ export const TopNavBar: React.FC<TopNavBarProps> = ({
                 • ₦{cartTotal.toLocaleString()}
               </span>
             </div>
-          </button>
+          </motion.button>
 
         </div>
       </div>

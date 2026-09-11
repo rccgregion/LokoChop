@@ -1,5 +1,6 @@
 import React from 'react';
 import { ActiveView, VendorUser, AdminUser } from '../types';
+import { AppLogo } from './AppLogo';
 import { 
   X, 
   Utensils, 
@@ -12,7 +13,8 @@ import {
   UserPlus,
   Lock,
   CheckCircle2,
-  Bike
+  Bike,
+  Sparkles
 } from 'lucide-react';
 
 interface PortalModalProps {
@@ -112,6 +114,14 @@ export const PortalModal: React.FC<PortalModalProps> = ({
       icon: FileText,
       color: 'text-emerald-700 bg-emerald-100',
       badge: { text: '100% Transparent', type: 'active' }
+    },
+    {
+      id: 'about' as ActiveView,
+      title: 'About LokoChop: Logo & Heritage',
+      desc: 'The Confluence food story, logo symbolism, and color palette identity.',
+      icon: Sparkles,
+      color: 'text-[#0E2A47] bg-[#FAF4EB]',
+      badge: { text: 'Brand Story', type: 'active' }
     }
   ];
 
@@ -119,9 +129,12 @@ export const PortalModal: React.FC<PortalModalProps> = ({
     <div className="fixed inset-0 bg-inverse-surface/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
       <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 max-w-lg w-full p-6 shadow-xl text-on-surface max-h-[90vh] flex flex-col">
         <div className="flex items-center justify-between pb-3 border-b border-outline-variant/20 shrink-0">
-          <div>
-            <h3 className="font-headline text-lg font-bold text-on-surface">Select LokoChop Workspace</h3>
-            <p className="text-xs text-on-surface-variant">Switch between customer, vendor, rider, and admin roles</p>
+          <div className="flex items-center gap-3">
+            <AppLogo size="sm" />
+            <div>
+              <h3 className="font-headline text-lg font-bold text-on-surface">Select LokoChop Workspace</h3>
+              <p className="text-xs text-on-surface-variant">Switch between customer, vendor, rider, and admin roles</p>
+            </div>
           </div>
           <button 
             onClick={onClose}

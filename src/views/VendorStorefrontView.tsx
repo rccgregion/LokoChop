@@ -4,6 +4,8 @@ import { CustomerReviews } from '../components/CustomerReviews';
 import { CateringInquiryModal } from '../components/CateringInquiryModal';
 import { RESTAURANTS_DATA, FOOD_ITEMS_DATA } from '../data/mockData';
 import { APPROVED_LOKOJA_VENDORS } from '../data/approvedVendors';
+import { InteractiveDishCard } from '../components/InteractiveDishCard';
+import { triggerFlyToCart } from '../components/FlyToCartParticle';
 import { 
   Star, 
   MapPin, 
@@ -342,72 +344,21 @@ export const VendorStorefrontView: React.FC<VendorStorefrontViewProps> = ({
               </span>
             </div>
 
-            {/* Dishes Grid */}
+            {/* Dishes Grid with 3D Hover-to-Elevate & Fly-To-Cart Particle Animations */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {filteredDishes.map(dish => {
                 const isStarred = favoriteFoodIds.includes(dish.id);
+                const currentQty = cartItems.find(it => it.id === dish.id)?.quantity || 0;
                 return (
-                  <article
+                  <InteractiveDishCard
                     key={dish.id}
-                    id={`dish-card-${dish.id}`}
-                    className="bg-surface-container-lowest rounded-xl border border-outline-variant/30 overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow"
-                  >
-                    <div className="relative h-44 w-full bg-surface-container">
-                      <img 
-                        src={dish.imageUrl}
-                        alt={dish.name}
-                        className="w-full h-full object-cover"
-                        referrerPolicy="no-referrer"
-                      />
-
-                      {/* Star / Favorite Toggle */}
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (onToggleFavorite) onToggleFavorite(dish.id);
-                        }}
-                        className={`absolute top-2.5 right-2.5 p-1.5 rounded-full shadow-md backdrop-blur-md transition-all active:scale-90 cursor-pointer z-10 ${
-                          isStarred
-                            ? 'bg-amber-400 text-stone-950 ring-2 ring-white'
-                            : 'bg-stone-900/60 text-white hover:text-amber-400 hover:bg-stone-900/80'
-                        }`}
-                        title={isStarred ? 'Remove from starred' : 'Star this dish'}
-                      >
-                        <Star className={`w-3.5 h-3.5 ${isStarred ? 'fill-stone-950 text-stone-950' : ''}`} />
-                      </button>
-
-                      {dish.badge && (
-                        <span className="absolute top-2 left-2 bg-primary-container text-on-primary text-[10px] font-bold px-2 py-0.5 rounded shadow-xs">
-                          {dish.badge}
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="p-4 flex flex-col flex-1 justify-between space-y-3">
-                      <div>
-                        <h3 className="font-headline text-base font-bold text-on-surface mb-1">
-                          {dish.name}
-                        </h3>
-                        <p className="text-xs text-on-surface-variant line-clamp-2 leading-relaxed">
-                          {dish.description}
-                        </p>
-                      </div>
-
-                      <div className="pt-3 border-t border-outline-variant/20 flex items-center justify-between">
-                        <span className="font-price-display text-lg text-primary font-bold">
-                          ₦{dish.price.toLocaleString()}
-                        </span>
-                        <button
-                          onClick={() => handleAdd(dish)}
-                          className="bg-secondary hover:bg-secondary/90 text-on-secondary text-xs font-semibold px-3.5 py-1.5 rounded-full flex items-center gap-1 active:scale-95 transition-transform cursor-pointer"
-                        >
-                          <Plus className="w-3.5 h-3.5" />
-                          <span>Add to Cart</span>
-                        </button>
-                      </div>
-                    </div>
-                  </article>
+                    dish={dish}
+                    onAddToCart={handleAdd}
+                    isStarred={isStarred}
+                    onToggleFavorite={onToggleFavorite}
+                    currentCartQty={currentQty}
+                    onUpdateQty={onUpdateQuantity}
+                  />
                 );
               })}
             </div>

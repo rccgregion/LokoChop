@@ -54,9 +54,14 @@
   --color-background: #fff8f0;
   --color-on-background: #1f1b10;
 
-  --font-headline: "Archivo Narrow", sans-serif;
-  --font-body: "Work Sans", sans-serif;
-  --font-price: "Archivo Narrow", sans-serif;
+  --font-headline: "Plus Jakarta Sans", "Sora", "Archivo Narrow", sans-serif;
+  --font-body: "Work Sans", "Plus Jakarta Sans", sans-serif;
+  --font-price: "Plus Jakarta Sans", "Archivo Narrow", sans-serif;
+}
+
+html {
+  overflow-x: hidden;
+  width: 100%;
 }
 
 body {
@@ -65,6 +70,8 @@ body {
   color: var(--color-on-surface);
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .font-headline {
@@ -73,6 +80,142 @@ body {
 
 .font-price-display {
   font-family: var(--font-price);
+}
+
+/* Glassmorphism & Ambient Depth */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.glass-capsule {
+  background: rgba(255, 248, 240, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 10px 30px -5px rgba(224, 90, 71, 0.15), 0 4px 12px -2px rgba(0, 0, 0, 0.05);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+}
+
+/* Keyframe animations for 3D ingredients & ambient blobs */
+@keyframes ambientBlobFloat1 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  50% {
+    transform: translate(45px, -35px) scale(1.12);
+  }
+}
+
+@keyframes ambientBlobFloat2 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  50% {
+    transform: translate(-40px, 30px) scale(1.08);
+  }
+}
+
+@keyframes ambientBlobFloat3 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  50% {
+    transform: translate(30px, 40px) scale(0.92);
+  }
+}
+
+@keyframes ingredientFloat1 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(6deg);
+  }
+}
+
+@keyframes ingredientFloat2 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-18px) rotate(-8deg);
+  }
+}
+
+@keyframes ingredientFloat3 {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) rotate(4deg) scale(1.06);
+  }
+}
+
+@keyframes whatsappGlow {
+  0%, 100% {
+    box-shadow: 0 0 16px rgba(37, 211, 102, 0.45), 0 0 32px rgba(37, 211, 102, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 28px rgba(37, 211, 102, 0.75), 0 0 50px rgba(37, 211, 102, 0.35);
+  }
+}
+
+@keyframes shimmerBorder {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.animate-blob-1 {
+  animation: ambientBlobFloat1 18s ease-in-out infinite;
+}
+
+.animate-blob-2 {
+  animation: ambientBlobFloat2 22s ease-in-out infinite;
+}
+
+.animate-blob-3 {
+  animation: ambientBlobFloat3 26s ease-in-out infinite;
+}
+
+.animate-ingredient-1 {
+  animation: ingredientFloat1 4.5s ease-in-out infinite;
+}
+
+.animate-ingredient-2 {
+  animation: ingredientFloat2 5.5s ease-in-out infinite 0.8s;
+}
+
+.animate-ingredient-3 {
+  animation: ingredientFloat3 6s ease-in-out infinite 1.5s;
+}
+
+.animate-whatsapp-glow {
+  animation: whatsappGlow 2.4s ease-in-out infinite;
+}
+
+.shimmer-badge {
+  background: linear-gradient(90deg, rgba(224, 90, 71, 0.12), rgba(244, 162, 97, 0.3), rgba(224, 90, 71, 0.12));
+  background-size: 200% 100%;
+  animation: shimmerBorder 3s linear infinite;
+}
+
+.shimmer-fast {
+  background: linear-gradient(90deg, rgba(42, 157, 143, 0.12), rgba(174, 239, 224, 0.35), rgba(42, 157, 143, 0.12));
+  background-size: 200% 100%;
+  animation: shimmerBorder 2.5s linear infinite;
 }
 
 .custom-scroll::-webkit-scrollbar,
