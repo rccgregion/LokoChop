@@ -11,6 +11,7 @@ const app = express();
 const PORT = 3000;
 
 app.use(express.json());
+app.use(express.static(path.join(process.cwd(), 'public')));
 
 // In-memory persistent password hashes generated with bcrypt (cost factor 10)
 // Pre-seeded with hashed credentials for all 14 Lokoja vendors + Super Admin
@@ -281,6 +282,9 @@ app.post('/api/notifications/sms', (req: Request, res: Response) => {
 // VITE MIDDLEWARE & STATIC SERVING
 // --------------------------------------------------------------------------
 async function startServer() {
+  // Serve static assets from public folder
+  app.use(express.static(path.join(process.cwd(), 'public')));
+
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
       server: { middlewareMode: true },

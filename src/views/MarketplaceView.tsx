@@ -45,8 +45,8 @@ export const MarketplaceView: React.FC<MarketplaceViewProps> = ({
   cartItems = [],
   onUpdateCartQty,
 }) => {
-  // Browsing modes: 'dishes' (Browse by Food) or 'vendors' (Browse Restaurants)
-  const [browseMode, setBrowseMode] = useState<MarketplaceBrowseMode>('dishes');
+  // Browsing modes: 'vendors' (Browse Restaurants by default) or 'dishes' (Browse by Food)
+  const [browseMode, setBrowseMode] = useState<MarketplaceBrowseMode>('vendors');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [quickFilter, setQuickFilter] = useState<string>('');
   const [localSearch, setLocalSearch] = useState<string>('');
@@ -332,13 +332,13 @@ Please connect me with a suitable vendor. Thanks!`;
                 <motion.article
                   key={vendor.id}
                   id={`vendor-card-${vendor.id}`}
-                  whileHover={{ y: -6, scale: 1.01 }}
-                  transition={{ type: 'spring', damping: 22, stiffness: 280 }}
+                  whileHover={{ y: -4 }}
+                  transition={{ type: 'spring', damping: 24, stiffness: 300 }}
                   onClick={() => onNavigate('vendor-storefront', vendor.id)}
-                  className="bg-white/85 backdrop-blur-xl rounded-2xl border border-white/60 overflow-hidden flex flex-col justify-between hover:border-primary/50 transition-all group shadow-sm hover:shadow-2xl hover:shadow-orange-500/15 cursor-pointer"
+                  className="bg-white rounded-2xl border border-stone-200/80 overflow-hidden flex flex-col justify-between hover:border-primary/40 transition-all group shadow-xs hover:shadow-xl hover:shadow-orange-500/10 cursor-pointer"
                 >
-                  {/* Vendor Photo with Badges */}
-                  <div className="relative h-48 overflow-hidden bg-surface-container">
+                  {/* Vendor Photo with Clean Floating Badges */}
+                  <div className="relative h-48 overflow-hidden bg-stone-100">
                     <img
                       src={vendor.imageUrl}
                       alt={vendor.name}
@@ -346,51 +346,51 @@ Please connect me with a suitable vendor. Thanks!`;
                       referrerPolicy="no-referrer"
                     />
 
-                    {/* Status Badge */}
-                    <span className="absolute top-3 left-3 bg-stone-900/80 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-[11px] font-bold flex items-center gap-1.5 shadow-sm">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    {/* Clean Status Badge */}
+                    <span className="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-stone-800 border border-stone-200/80 px-2.5 py-1 rounded-full text-[11px] font-bold flex items-center gap-1.5 shadow-xs">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                       <span>{vendor.status}</span>
                     </span>
 
                     {/* Delivery Time Badge */}
-                    <span className="absolute top-3 right-3 bg-white/90 backdrop-blur-md text-on-surface px-2.5 py-1 rounded-full text-[11px] font-bold shadow-xs flex items-center gap-1">
+                    <span className="absolute top-3 right-3 bg-white/95 backdrop-blur-md text-stone-800 border border-stone-200/80 px-2.5 py-1 rounded-full text-[11px] font-bold shadow-xs flex items-center gap-1">
                       <Timer className="w-3.5 h-3.5 text-primary" />
                       <span>{vendor.expectedDeliveryTime}</span>
-                    </span>
-
-                    {/* Zone Chip */}
-                    <span className="absolute bottom-3 left-3 bg-stone-900/75 backdrop-blur-md text-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider">
-                      {vendor.zoneText}
                     </span>
                   </div>
 
                   {/* Vendor Details */}
                   <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between space-y-3">
                     <div>
-                      <div className="flex items-start justify-between gap-2">
-                        <h3 className="font-headline text-lg font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-1">
-                          {vendor.name}
-                        </h3>
-                        <span className="text-[11px] font-mono font-bold px-1.5 py-0.5 rounded bg-primary/10 text-primary shrink-0">
+                      {/* Zone Chip & Short Code */}
+                      <div className="flex items-center justify-between gap-2 mb-1.5">
+                        <span className="text-[11px] font-bold text-primary tracking-wide">
+                          {vendor.zoneText}
+                        </span>
+                        <span className="text-[11px] font-mono font-bold px-1.5 py-0.5 rounded bg-stone-100 text-stone-700 shrink-0 border border-stone-200/60">
                           {vendor.shortCode}
                         </span>
                       </div>
 
-                      <p className="text-xs text-on-surface-variant mt-1 flex items-center gap-1 line-clamp-1">
-                        <MapPin className="w-3.5 h-3.5 text-outline shrink-0" />
+                      <h3 className="font-headline text-lg font-bold text-stone-900 group-hover:text-primary transition-colors leading-snug line-clamp-1">
+                        {vendor.name}
+                      </h3>
+
+                      <p className="text-xs text-stone-500 mt-1 flex items-center gap-1 line-clamp-1 leading-normal">
+                        <MapPin className="w-3.5 h-3.5 text-stone-400 shrink-0" />
                         <span>{vendor.address}</span>
                       </p>
 
                       {vendor.primaryOfferings && (
-                        <p className="text-xs text-on-surface-variant mt-2 line-clamp-2 leading-relaxed">
+                        <p className="text-xs text-stone-600 mt-2 line-clamp-2 leading-relaxed">
                           {vendor.primaryOfferings}
                         </p>
                       )}
 
                       {vendor.signatureDishes && vendor.signatureDishes.length > 0 && (
-                        <div className="mt-2 text-[11px]">
+                        <div className="mt-2 text-xs leading-normal">
                           <span className="font-bold text-primary mr-1">Signatures:</span>
-                          <span className="text-on-surface-variant font-medium">
+                          <span className="text-stone-600 font-medium">
                             {vendor.signatureDishes.join(' • ')}
                           </span>
                         </div>
@@ -399,19 +399,19 @@ Please connect me with a suitable vendor. Thanks!`;
                       {/* Feature Badges */}
                       <div className="flex flex-wrap gap-1.5 mt-3">
                         {vendor.hasFamilyMeals && (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/20 px-2 py-0.5 rounded-full">
-                            <Users className="w-3 h-3" />
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-full">
+                            <Users className="w-3 h-3 text-amber-600" />
                             <span>Family Meals</span>
                           </span>
                         )}
                         {vendor.hasPremiumMenu && (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20 px-2 py-0.5 rounded-full">
-                            <Star className="w-3 h-3" />
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-purple-50 text-purple-800 border border-purple-200 px-2 py-0.5 rounded-full">
+                            <Star className="w-3 h-3 text-purple-600" />
                             <span>Premium Menu</span>
                           </span>
                         )}
                         {vendor.tags.slice(0, 2).map((tag, idx) => (
-                          <span key={idx} className="text-[10px] bg-stone-100 text-on-surface-variant px-2 py-0.5 rounded-full font-medium">
+                          <span key={idx} className="text-[10px] bg-stone-100 text-stone-600 px-2 py-0.5 rounded-full font-medium border border-stone-200/50">
                             {tag}
                           </span>
                         ))}
@@ -419,8 +419,8 @@ Please connect me with a suitable vendor. Thanks!`;
                     </div>
 
                     {/* Card Bottom CTA */}
-                    <div className="pt-3 border-t border-outline-variant/20 flex items-center justify-between">
-                      <span className="text-xs text-on-surface-variant font-medium">
+                    <div className="pt-3 border-t border-stone-100 flex items-center justify-between">
+                      <span className="text-xs text-stone-500 font-medium">
                         Tap to open full menu
                       </span>
                       <button

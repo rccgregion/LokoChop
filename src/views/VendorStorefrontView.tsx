@@ -76,6 +76,9 @@ export const VendorStorefrontView: React.FC<VendorStorefrontViewProps> = ({
 
   // Choose appropriate hero image based on vendor specialty
   const heroBannerUrl = useMemo(() => {
+    if (matchedRestaurant?.imageUrl) {
+      return matchedRestaurant.imageUrl;
+    }
     const lowerName = vendorName.toLowerCase();
     if (lowerName.includes('craving') || lowerName.includes('burger') || lowerName.includes('fries')) {
       return 'https://lh3.googleusercontent.com/aida-public/AB6AXuBRV0OQefmviGOiBtG6RNxPxQOe2pBjCCow6QPIXRDJe0fM1at6GYFO0LrfPOltotDJrA1Z74-t69n5Uu6i5ovnojS8pLGtq0sfy7yquUPOrjBoqxAYnwCkHbG9bhmKVI2GJu05dSxdz199euNVT91IpucMu0pvHeAb18e1aF0HmrnhUKZXuqnpsIBoEVp05mO7pwqTuFkmgM6SHTDQErMOyJCdyJfF9d-z8N1C3CIdcGTgfWj2OnXv';
@@ -117,23 +120,40 @@ export const VendorStorefrontView: React.FC<VendorStorefrontViewProps> = ({
       'Fresh Beverage Pack'
     ];
 
-    return sigDishes.map((dishName, idx) => ({
-      id: `${selectedVendorId}-item-${idx}`,
-      name: dishName,
-      vendorName: vendorName,
-      vendorId: selectedVendorId,
-      zone: vendorZoneText,
-      tier: (vendorTier as any) || 'Tier 1',
-      category: (idx % 2 === 0 ? 'rice' : 'grill') as any,
-      price: 2500 + (idx * 600),
-      prepTime: '15m',
-      rating: 4.8,
-      description: `Freshly prepared specialty dish from ${vendorName}, crafted to order and dispatched hot.`,
-      imageUrl: heroBannerUrl,
-      badge: idx === 0 ? 'Signature Dish' : 'Bestseller',
-      inStock: true
-    }));
-  }, [selectedVendorId, vendorName, vendorZoneText, vendorTier, matchedRestaurant, heroBannerUrl]);
+    const getDishFoodImage = (name: string, cat?: string) => {
+      const n = (name || '').toLowerCase();
+      const c = (cat || '').toLowerCase();
+      if (n.includes('shawarma') || n.includes('wrap')) return '/images/dishes/shawarma_wrap.jpg';
+      if (n.includes('catfish') || n.includes('fish')) return '/images/dishes/grilled_catfish.jpg';
+      if (n.includes('spag') || n.includes('pasta') || n.includes('noodle')) return '/images/dishes/jollof_spaghetti.jpg';
+      if (n.includes('pie') || n.includes('roll') || n.includes('burger') || n.includes('pastr') || n.includes('sandwich')) return '/images/dishes/meat_pie_pastry.jpg';
+      if (c.includes('rice') || n.includes('jollof') || n.includes('fried rice') || n.includes('rice')) return '/images/dishes/jollof_rice.jpg';
+      if (c.includes('drink') || n.includes('chapman') || n.includes('zobo') || n.includes('juice') || n.includes('beverage')) return '/images/dishes/chapman_drink.jpg';
+      if (c.includes('swallow') || n.includes('amala') || n.includes('ewedu') || n.includes('soup') || n.includes('egusi') || n.includes('pounded yam')) return '/images/dishes/amala_swallow.jpg';
+      if (c.includes('grill') || n.includes('suya') || n.includes('asun') || n.includes('chicken') || n.includes('turkey') || n.includes('wings')) return '/images/dishes/suya_grill.jpg';
+      return '/images/dishes/jollof_rice.jpg';
+    };
+
+    return sigDishes.map((dishName, idx) => {
+      const itemCat = idx % 2 === 0 ? 'rice' : 'grill';
+      return {
+        id: `${selectedVendorId}-item-${idx}`,
+        name: dishName,
+        vendorName: vendorName,
+        vendorId: selectedVendorId,
+        zone: vendorZoneText,
+        tier: (vendorTier as any) || 'Tier 1',
+        category: itemCat as any,
+        price: 2500 + (idx * 600),
+        prepTime: '15m',
+        rating: 4.8,
+        description: `Freshly prepared specialty dish from ${vendorName}, crafted to order and dispatched hot.`,
+        imageUrl: getDishFoodImage(dishName, itemCat),
+        badge: idx === 0 ? 'Signature Dish' : 'Bestseller',
+        inStock: true
+      };
+    });
+  }, [selectedVendorId, vendorName, vendorZoneText, vendorTier, matchedRestaurant]);
 
   // 3. Extract unique categories from dishes
   const availableCategories = useMemo(() => {
